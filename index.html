@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="es-CL">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <title>Calculadora de precios | Automatización con IA</title>
+  <style>
+    :root {
+      --bg: #0c1018;
+      --surface: #141b27;
+      --field: #0d1420;
+      --border: #2a3547;
+      --text: #eff3fa;
+      --muted: #a9b5c8;
+      --accent: #80e2c2;
+      --blue: #9dbbff;
+      --warning: #ffd18a;
+      --danger: #ffacb7;
+      --radius: 18px;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font: 16px/1.55 system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+    main { width: min(1180px, 100%); margin: auto; padding: 44px 24px; }
+    header { max-width: 790px; margin-bottom: 30px; }
+    .eyebrow {
+      color: var(--accent);
+      font-size: .75rem;
+      font-weight: 750;
+      letter-spacing: .13em;
+      text-transform: uppercase;
+    }
+    h1 { margin: 10px 0; font-size: clamp(2rem, 5vw, 3.1rem); line-height: 1.12; letter-spacing: -.04em; }
+    h2 { margin: 0 0 18px; font-size: 1.18rem; }
+    h3 { margin: 0 0 8px; font-size: .97rem; }
+    p { margin: 0; }
+    .intro, .help, .note, footer { color: var(--muted); }
+    .intro { font-size: 1rem; }
+    .layout { display: grid; grid-template-columns: .95fr 1.15fr; gap: 22px; align-items: start; }
+    .panel {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+    }
+    .fields { display: grid; grid-template-columns: 1fr 1fr; gap: 19px 16px; }
+    .field { min-width: 0; }
+    .wide { grid-column: 1 / -1; }
+    label { display: block; margin-bottom: 7px; font-size: .88rem; font-weight: 650; }
+    input, select {
+      width: 100%;
+      min-height: 48px;
+      padding: 11px 12px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: var(--field);
+      color: var(--text);
+      font: inherit;
+    }
+    input:focus, select:focus, summary:focus-visible {
+      outline: 3px solid var(--accent);
+      outline-offset: 3px;
+    }
+    input[aria-invalid="true"] { border-color: var(--danger); }
+    .help { margin-top: 6px; font-size: .77rem; line-height: 1.45; }
+    .section-label {
+      grid-column: 1 / -1;
+      padding-top: 18px;
+      border-top: 1px solid var(--border);
+      color: var(--accent);
+      font-size: .78rem;
+      font-weight: 700;
+      letter-spacing: .07em;
+      text-transform: uppercase;
+    }
+    .alert { margin-top: 22px; padding: 19px; border-radius: 12px; border: 1px solid; }
+    .education { background: #1b2434; border-color: #3b5074; }
+    .education h3 { color: var(--blue); }
+    .danger { background: #321c25; border-color: #8d4657; }
+    .danger h3 { color: var(--danger); }
+    .warning { background: #2b251c; border-color: #77603d; color: var(--warning); }
+    .alert p { font-size: .88rem; }
+    .alert p + p { margin-top: 11px; }
+    .comparison { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 15px 0; }
+    .comparison div { padding: 12px; border-radius: 9px; background: #101826; }
+    .comparison span { display: block; font-size: .76rem; color: var(--muted); }
+    .comparison strong { display: block; font-size: 1.7rem; }
+    .comparison div:last-child strong { color: var(--accent); }
+    .results { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .card {
+      padding: 20px;
+      border: 1px solid var(--border);
+      border-radius: 13px;
+      background: var(--field);
+      min-width: 0;
+    }
+    .card.primary { border-color: #397360; background: #11261f; }
+    .card-label { display: block; color: var(--muted); font-size: .83rem; }
+    .value {
+      display: block;
+      margin: 8px 0;
+      font-size: clamp(1.5rem, 3vw, 2rem);
+      line-height: 1.2;
+      font-weight: 750;
+      letter-spacing: -.035em;
+      overflow-wrap: anywhere;
+      font-variant-numeric: tabular-nums;
+    }
+    .primary .value { color: var(--accent); }
+    .explanation { color: var(--muted); font-size: .78rem; line-height: 1.5; }
+    .detail {
+      margin-top: 18px;
+      padding-top: 18px;
+      border-top: 1px solid var(--border);
+      font-size: .86rem;
+    }
+    .detail p + p { margin-top: 9px; }
+    .references { margin-top: 22px; }
+    .reference-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; }
+    .reference-grid strong { display: block; font-size: 1.15rem; margin: 6px 0; }
+    .reference-grid span { color: var(--muted); font-size: .82rem; }
+    .note { font-size: .8rem; margin-top: 18px; }
+    details { margin-top: 22px; }
+    summary { cursor: pointer; font-weight: 650; }
+    details ul { padding-left: 20px; color: var(--muted); font-size: .86rem; }
+    details li + li { margin-top: 9px; }
+    footer { margin-top: 24px; font-size: .78rem; }
+    [hidden] { display: none !important; }
+    @media (max-width: 880px) {
+      .layout { grid-template-columns: 1fr; }
+      .reference-grid { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 480px) {
+      main { padding: 28px 16px; }
+      .panel { padding: 18px; }
+      .fields, .results { grid-template-columns: 1fr; }
+      .card { padding: 17px; }
+      .reference-grid { grid-template-columns: 1fr; gap: 20px; }
+    }
+    @media (prefers-reduced-motion: no-preference) {
+      input, select { transition: border-color .15s ease; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <div class="eyebrow">Cotiza con números claros</div>
+      <h1>¿Cuánto cobrar por tu automatización con IA?</h1>
+      <p class="intro">Calcula implementación, mantención y uso adicional. Revisa tu margen antes de enviar la cotización. Todos los montos están en USD.</p>
+    </header>
+
+    <div class="layout">
+      <section class="panel" aria-labelledby="inputs-title">
+        <h2 id="inputs-title">Datos de tu proyecto</h2>
+        <form id="calculator" novalidate>
+          <div class="fields">
+            <div class="field wide">
+              <label for="tools">Herramientas y APIs al mes (USD)</label>
+              <input id="tools" type="text" inputmode="decimal" value="80" aria-describedby="tools-help" autocomplete="off">
+              <p class="help" id="tools-help">Incluye el costo total esperado para el volumen que ingreses.</p>
+            </div>
+            <div class="field">
+              <label for="hours">Horas de implementación</label>
+              <input id="hours" type="text" inputmode="decimal" value="20" autocomplete="off">
+            </div>
+            <div class="field">
+              <label for="hourly">Tu valor hora (USD)</label>
+              <input id="hourly" type="text" inputmode="decimal" value="30" autocomplete="off">
+            </div>
+            <div class="field wide">
+              <label for="salary">Sueldo mensual del rol reemplazado (USD)</label>
+              <input id="salary" type="text" inputmode="decimal" placeholder="Opcional, por ejemplo 1200" aria-describedby="salary-help" autocomplete="off">
+              <p class="help" id="salary-help">Un valor mayor que cero activa el escenario de reemplazo de un rol. Se usa como ancla de valor.</p>
+            </div>
+            <div class="field wide">
+              <label for="volume">Operaciones mensuales esperadas</label>
+              <input id="volume" type="text" inputmode="numeric" value="5000" aria-describedby="volume-help" autocomplete="off">
+              <p class="help" id="volume-help">Una operación es una ejecución o acción facturable, según lo que acuerdes con el cliente.</p>
+            </div>
+            <div class="field">
+              <label for="multiplier">Multiplicador para cotizar</label>
+              <input id="multiplier" type="text" inputmode="decimal" value="1.30" aria-describedby="multiplier-help" autocomplete="off">
+              <p class="help" id="multiplier-help">Por ejemplo, 1.30 o 1,30. Se aplica a los costos.</p>
+            </div>
+            <div class="field">
+              <label for="target">Margen objetivo (%)</label>
+              <input id="target" type="text" inputmode="decimal" value="30" aria-describedby="target-help" autocomplete="off">
+              <p class="help" id="target-help">Debe ser menor que 100%. No cambia tu multiplicador automáticamente.</p>
+            </div>
+
+            <div class="section-label">Mantención y consumo</div>
+            <div class="field wide">
+              <label for="maintenance">Mantención como porcentaje del setup</label>
+              <select id="maintenance" aria-describedby="maintenance-help">
+                <option value="0">0% · Sin honorarios de mantención</option>
+                <option value="10">10% · Mantención básica</option>
+                <option value="15" selected>15% · Mantención estándar</option>
+                <option value="20">20% · Mantención intensiva</option>
+                <option value="30" data-role>30% · Reemplazo de un rol</option>
+                <option value="40" data-role>40% · Reemplazo de un rol</option>
+                <option value="50" data-role>50% · Reemplazo de un rol</option>
+              </select>
+              <p class="help" id="maintenance-help">Honorarios de 10% a 20% del setup, o hasta 50% si reemplaza un rol. Herramientas y APIs se cobran aparte dentro de la mensualidad.</p>
+            </div>
+            <div class="field">
+              <label for="included">Operaciones incluidas al mes</label>
+              <input id="included" type="text" inputmode="numeric" value="5000" autocomplete="off">
+            </div>
+            <div class="field">
+              <label for="overage">USD por cada 100 adicionales</label>
+              <input id="overage" type="text" inputmode="decimal" value="1" aria-describedby="overage-help" autocomplete="off">
+              <p class="help" id="overage-help">Se cobra cada bloque de 100 iniciado.</p>
+            </div>
+          </div>
+        </form>
+
+        <div id="validation" class="alert danger" role="alert" hidden>
+          <h3>Revisa los datos ingresados</h3>
+          <p id="validation-text"></p>
+        </div>
+
+        <aside class="alert education" aria-labelledby="margin-title">
+          <h3 id="margin-title">Markup no es lo mismo que margen</h3>
+          <div class="comparison">
+            <div>
+              <span>Markup que puedes confundir con margen</span>
+              <strong id="markup-result">30%</strong>
+            </div>
+            <div>
+              <span>Margen real de ese multiplicador</span>
+              <strong id="multiplier-margin">23,08%</strong>
+            </div>
+          </div>
+          <p>El <strong>markup se calcula sobre el costo</strong>: (precio - costo) ÷ costo. El <strong>margen se calcula sobre el precio</strong>: (precio - costo) ÷ precio.</p>
+          <p id="margin-example"></p>
+          <p id="target-result"></p>
+        </aside>
+      </section>
+
+      <section class="panel" aria-labelledby="results-title">
+        <h2 id="results-title">Tu cotización estimada</h2>
+        <div id="results-region" aria-live="polite" aria-atomic="true">
+          <div class="results">
+            <article class="card primary">
+              <span class="card-label">Implementación sugerida</span>
+              <output id="setup-result" class="value"></output>
+              <p id="setup-explanation" class="explanation"></p>
+            </article>
+            <article class="card primary">
+              <span class="card-label">Mensualidad base sugerida</span>
+              <output id="monthly-result" class="value"></output>
+              <p id="monthly-explanation" class="explanation"></p>
+            </article>
+            <article class="card">
+              <span class="card-label">Operaciones incluidas al mes</span>
+              <output id="included-result" class="value"></output>
+              <p class="explanation">Umbral contratado. Se reinicia cada mes y no se acumula.</p>
+            </article>
+            <article class="card">
+              <span class="card-label">Precio del excedente</span>
+              <output id="overage-result" class="value"></output>
+              <p id="overage-explanation" class="explanation"></p>
+            </article>
+            <article class="card">
+              <span class="card-label">Margen real proyectado a 12 meses</span>
+              <output id="margin-result" class="value"></output>
+              <p id="margin-explanation" class="explanation"></p>
+            </article>
+            <article class="card">
+              <span class="card-label">Ingreso proyectado a 12 meses</span>
+              <output id="annual-result" class="value"></output>
+              <p id="annual-explanation" class="explanation"></p>
+            </article>
+          </div>
+
+          <div id="zero-warning" class="alert danger" role="alert" hidden>
+            <h3>Mensualidad en cero: el trabajo futuro es gratis</h3>
+            <p>Sin mantención cobrada, los ajustes, fallas y soporte que asumas saldrán de tu tiempo. Define un cobro recurrente o cotiza cada intervención por separado.</p>
+          </div>
+          <div id="no-maintenance-warning" class="alert danger" role="alert" hidden>
+            <h3>No estás cobrando honorarios de mantención</h3>
+            <p>La mensualidad solo contempla herramientas y APIs con tu multiplicador. No hay un cargo específico por soporte, ajustes ni seguimiento.</p>
+          </div>
+          <div id="loss-warning" class="alert warning" role="status" hidden></div>
+
+          <div class="detail">
+            <p id="monthly-total"></p>
+            <p id="setup-margin"></p>
+            <p id="profit-result"></p>
+            <p id="value-anchor"></p>
+          </div>
+        </div>
+        <p class="note">El margen considera tu tiempo de implementación y los costos mensuales ingresados. No incluye impuestos, comisiones, horas futuras de soporte ni otros costos no declarados. No equivale a utilidad neta.</p>
+      </section>
+    </div>
+
+    <section class="panel references" aria-labelledby="references-title">
+      <h2 id="references-title">Referencias de mercado</h2>
+      <div class="reference-grid">
+        <div>
+          <span>Implementación</span>
+          <strong>USD 1.000</strong>
+          <span>Mediana de referencia. Rango: USD 500 a USD 2.400.</span>
+        </div>
+        <div>
+          <span>Mantención mensual</span>
+          <strong>USD 75 a USD 150</strong>
+          <span>Referencia para servicios de mantención.</span>
+        </div>
+        <div>
+          <span>Si reemplaza un rol</span>
+          <strong>USD 150 a USD 480</strong>
+          <span>Referencia mensual para ese escenario.</span>
+        </div>
+        <div>
+          <span>Ejemplo de consumo</span>
+          <strong>5.000 operaciones</strong>
+          <span>Incluidas al mes, más USD 1 por cada 100 adicionales.</span>
+        </div>
+      </div>
+      <p class="note">Valores orientativos proporcionados para esta calculadora, sin fuente ni fecha de relevamiento. No son mínimos, máximos ni tarifas garantizadas. No ajustan automáticamente tu cotización.</p>
+    </section>
+
+    <details class="panel">
+      <summary>Cómo se calculan los resultados</summary>
+      <ul>
+        <li>Costo de implementación = horas estimadas × tu valor hora. Setup sugerido = ese costo × tu multiplicador.</li>
+        <li>Honorarios de mantención = setup × porcentaje seleccionado. Mensualidad base = honorarios + costo mensual de herramientas y APIs × tu multiplicador.</li>
+        <li>El porcentaje de mantención se aplica a los honorarios. El total mensual puede superar ese porcentaje al incorporar herramientas y APIs.</li>
+        <li>Excedente = operaciones sobre el umbral, divididas por 100 y redondeadas hacia arriba, por la tarifa de cada bloque. Bajo el umbral no se cobra excedente.</li>
+        <li>Ingreso anual = setup + 12 × (mensualidad base + excedente mensual). Supone 12 mensualidades completas y el mismo volumen cada mes.</li>
+        <li>Costos anuales considerados = costo de implementación + 12 × costo mensual de herramientas y APIs. Margen anual = (ingreso anual - costos anuales) ÷ ingreso anual.</li>
+        <li>El sueldo funciona como ancla comparativa. No incrementa automáticamente el precio ni supone que todo ese sueldo se convierta en ahorro.</li>
+        <li>Multiplicador para un margen objetivo = 1 ÷ (1 - margen objetivo / 100). Un multiplicador de 1,30 genera 30% de markup y aproximadamente 23,08% de margen.</li>
+        <li>Los cálculos conservan precisión interna y los montos se muestran con dos decimales. Para ingresar números, usa coma o punto decimal sin separadores de miles.</li>
+      </ul>
+    </details>
+
+    <footer>Los cálculos se ejecutan en tu navegador. Tus datos no se envían ni se guardan.</footer>
+    <noscript>
+      <p class="alert danger">Activa JavaScript en tu navegador para calcular los precios.</p>
+    </noscript>
+  </main>
+
+  <script>
+    (() => {
+      "use strict";
+
+      const $ = id => document.getElementById(id);
+      const moneyFormat = new Intl.NumberFormat("es-CL", {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+      });
+      const numberFormat = new Intl.NumberFormat("es-CL", {
+        maximumFractionDigits: 2
+      });
+      const integerFormat = new Intl.NumberFormat("es-CL", {
+        maximumFractionDigits: 0
+      });
+      const multiplierFormat = new Intl.NumberFormat("es-CL", {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+      });
+
+      const money = value => "USD " + moneyFormat.format(value);
+      const percent = value => numberFormat.format(value) + "%";
+      const put = (id, text) => { $(id).textContent = text; };
+
+      const definitions = [
+        ["tools", "Herramientas y APIs", false],
+        ["hours", "Horas de implementación", false],
+        ["hourly", "Valor hora", false],
+        ["salary", "Sueldo mensual", false],
+        ["volume", "Operaciones esperadas", true],
+        ["multiplier", "Multiplicador", false],
+        ["target", "Margen objetivo", false],
+        ["included", "Operaciones incluidas", true],
+        ["overage", "Tarifa del excedente", false]
+      ];
+
+      function readValue(id) {
+        const raw = $(id).value.trim();
+        if (id === "salary" && raw === "") return 0;
+        if (!/^(?:\d+(?:[.,]\d+)?|[.,]\d+)$/.test(raw)) return NaN;
+        return Number(raw.replace(",", "."));
+      }
+
+      function update() {
+        const values = {};
+        const errors = [];
+
+        for (const [id, label, whole] of definitions) {
+          const value = readValue(id);
+          values[id] = value;
+          let error = "";
+
+          if (!Number.isFinite(value) || value < 0) {
+            error = label + ": ingresa un número válido de cero o más, sin separadores de miles.";
+          } else if (whole && !Number.isSafeInteger(value)) {
+            error = label + ": ingresa un número entero válido.";
+          } else if (value > 1e12) {
+            error = label + ": ingresa un valor de hasta 1.000.000.000.000.";
+          } else if (id === "multiplier" && value <= 0) {
+            error = "Multiplicador: debe ser mayor que cero.";
+          } else if (id === "target" && value >= 100) {
+            error = "Margen objetivo: debe ser de cero a menos de 100%.";
+          }
+
+          $(id).setAttribute("aria-invalid", String(Boolean(error)));
+          if (error) errors.push(error);
+        }
+
+        const replacesRole = Number.isFinite(values.salary) && values.salary > 0;
+        for (const option of $("maintenance").querySelectorAll("[data-role]")) {
+          option.disabled = !replacesRole;
+          option.hidden = !replacesRole;
+        }
+        if (!replacesRole && Number($("maintenance").value) > 20) {
+          $("maintenance").value = "15";
+        }
+
+        const validMultiplier = Number.isFinite(values.multiplier) &&
+          values.multiplier > 0 && values.multiplier <= 1e12;
+
+        if (validMultiplier) {
+          const markup = (values.multiplier - 1) * 100;
+          const realMargin = (1 - 1 / values.multiplier) * 100;
+
+          put("markup-result", percent(markup));
+          put("multiplier-margin", percent(realMargin));
+          put(
+            "margin-example",
+            "Con un costo de " + money(100) + " y un multiplicador de " +
+            numberFormat.format(values.multiplier) + ", cobras " +
+            money(100 * values.multiplier) + ". La diferencia es " +
+            money(100 * (values.multiplier - 1)) + ": equivale a " +
+            percent(realMargin) + " del precio."
+          );
+        } else {
+          put("markup-result", "Sin calcular");
+          put("multiplier-margin", "Sin calcular");
+          put("margin-example", "Ingresa un multiplicador válido para comparar markup y margen.");
+        }
+
+        if (Number.isFinite(values.target) && values.target >= 0 && values.target < 100) {
+          const correctMultiplier = 1 / (1 - values.target / 100);
+          put(
+            "target-result",
+            "Para lograr " + percent(values.target) +
+            " de margen sobre un costo, el multiplicador correcto es aproximadamente " +
+            multiplierFormat.format(correctMultiplier) +
+            ". Fórmula: 1 ÷ (1 - " + numberFormat.format(values.target) +
+            " / 100). Reemplaza tu multiplicador si quieres usar este objetivo."
+          );
+        } else {
+          put("target-result", "Ingresa un margen objetivo válido menor que 100%.");
+        }
+
+        $("validation").hidden = errors.length === 0;
+        put("validation-text", errors.join(" "));
+        $("results-region").hidden = errors.length > 0;
+        if (errors.length) return;
+
+        const { tools, hours, hourly, salary, volume, multiplier, included, overage } = values;
+        const rate = Number($("maintenance").value) / 100;
+        const implementationCost = hours * hourly;
+        const setup = implementationCost * multiplier;
+        const maintenanceFee = setup * rate;
+        const toolsPrice = tools * multiplier;
+        const monthly = maintenanceFee + toolsPrice;
+        const extraOperations = Math.max(0, volume - included);
+        const blocks = Math.ceil(extraOperations / 100);
+        const extraCharge = blocks * overage;
+        const monthlyTotal = monthly + extraCharge;
+        const annualRevenue = setup + 12 * monthlyTotal;
+        const annualCosts = implementationCost + 12 * tools;
+        const annualProfit = annualRevenue - annualCosts;
+        const annualMargin = annualRevenue > 0 ? annualProfit / annualRevenue * 100 : null;
+        const setupMargin = setup > 0 ? (setup - implementationCost) / setup * 100 : null;
+
+        put("setup-result", money(setup));
+        put(
+          "setup-explanation",
+          numberFormat.format(hours) + " horas × " + money(hourly) +
+          " × multiplicador " + numberFormat.format(multiplier) + "."
+        );
+        put("monthly-result", money(monthly));
+        put(
+          "monthly-explanation",
+          percent(rate * 100) + " del setup (" + money(maintenanceFee) +
+          ") + herramientas y APIs con multiplicador (" + money(toolsPrice) + ")."
+        );
+        put("included-result", integerFormat.format(included));
+        put("overage-result", money(overage) + " / 100");
+        put(
+          "overage-explanation",
+          integerFormat.format(extraOperations) + " operaciones adicionales previstas: " +
+          integerFormat.format(blocks) + " bloques iniciados × " + money(overage) +
+          " = " + money(extraCharge) + " al mes."
+        );
+        put("margin-result", annualMargin === null ? "No calculable" : percent(annualMargin));
+        put(
+          "margin-explanation",
+          annualMargin === null
+            ? "Sin ingresos no se puede dividir el resultado por el precio."
+            : "(" + money(annualRevenue) + " de ingreso - " + money(annualCosts) +
+              " de costos) ÷ " + money(annualRevenue) + "."
+        );
+        put("annual-result", money(annualRevenue));
+        put(
+          "annual-explanation",
+          money(setup) + " de setup + 12 × " + money(monthlyTotal) +
+          " mensuales, incluido el excedente esperado."
+        );
+        put(
+          "monthly-total",
+          "Cobro mensual al volumen esperado: " + money(monthlyTotal) +
+          " para " + integerFormat.format(volume) + " operaciones."
+        );
+        put(
+          "setup-margin",
+          setupMargin === null
+            ? "Margen de implementación: no calculable porque el setup es cero."
+            : "Margen de implementación: " + percent(setupMargin) +
+              ", después de valorizar tus horas."
+        );
+        put(
+          "profit-result",
+          "Resultado anual después de los costos considerados: " + money(annualProfit) + "."
+        );
+
+        if (salary > 0) {
+          put(
+            "value-anchor",
+            "Ancla de valor: el cobro mensual estimado equivale a " +
+            percent(monthlyTotal / salary * 100) + " del sueldo de " +
+            money(salary) + ". El ingreso del primer año equivale a " +
+            percent(annualRevenue / (salary * 12) * 100) +
+            " de 12 sueldos. Es una comparación, no un ahorro garantizado."
+          );
+        } else {
+          put("value-anchor", "Ingresa un sueldo opcional para comparar tu cotización con el valor del rol reemplazado.");
+        }
+
+        $("zero-warning").hidden = monthly !== 0;
+        $("no-maintenance-warning").hidden = rate !== 0 || monthly === 0;
+
+        const warnings = [];
+        if (multiplier < 1) {
+          warnings.push("Tu multiplicador es menor que 1: cotizas los componentes basados en costo por debajo de su costo.");
+        }
+        if (annualProfit < 0) {
+          warnings.push("La proyección anual presenta una pérdida de " + money(Math.abs(annualProfit)) + ".");
+        }
+        if (setup === 0 && rate > 0) {
+          warnings.push("El setup es cero, por lo que aplicar un porcentaje no genera honorarios de mantención.");
+        }
+        if (extraOperations > 0 && overage === 0) {
+          warnings.push("El volumen supera lo incluido y tu tarifa del excedente es cero: esas operaciones se entregan sin cobro adicional.");
+        }
+        $("loss-warning").hidden = warnings.length === 0;
+        put("loss-warning", warnings.join(" "));
+      }
+
+      let timer;
+      $("calculator").addEventListener("input", () => {
+        clearTimeout(timer);
+        timer = setTimeout(update, 120);
+      });
+      $("calculator").addEventListener("change", () => {
+        clearTimeout(timer);
+        update();
+      });
+      $("calculator").addEventListener("submit", event => event.preventDefault());
+      update();
+    })();
+  </script>
+</body>
+</html>
