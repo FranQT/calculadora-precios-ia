@@ -5,6 +5,24 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="color-scheme" content="dark">
   <title>Calculadora de precios | Automatización con IA</title>
+  <meta name="description" content="Calcula implementación, mantención y excedentes de tu automatización con IA. Compara markup y margen real y proyecta tus ingresos a 12 meses.">
+  <meta property="og:title" content="Calculadora de precios | Automatización con IA">
+  <meta property="og:description" content="1,30 no es 30%. Es 23,08%. Calcula tu margen real, cotiza la mantención y compara tus ingresos a 12 meses.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://calculadora-precios-ia.vercel.app">
+  <meta property="og:locale" content="es_CL">
+  <!-- Algunos servicios de vista previa requieren una imagen HTTPS y no admiten SVG en data URI. -->
+  <meta property="og:image" content="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='630' viewBox='0 0 1200 630'%3E%3Crect width='1200' height='630' fill='%230c1018'/%3E%3Crect x='50' y='50' width='1100' height='530' rx='28' fill='%23141b27' stroke='%232a3547' stroke-width='2'/%3E%3Cpath d='M85 120H220' stroke='%2380e2c2' stroke-width='8'/%3E%3Cg font-family='Arial,sans-serif'%3E%3Ctext x='85' y='215' fill='%23eff3fa' font-size='62' font-weight='700'%3ECalculadora de precios%3C/text%3E%3Ctext x='85' y='285' fill='%23a9b5c8' font-size='36'%3EAutomatizaci%C3%B3n con IA%3C/text%3E%3Ctext x='85' y='405' fill='%2380e2c2' font-size='54' font-weight='700'%3E1,30 no es 30%25. Es 23,08%25.%3C/text%3E%3Ctext x='85' y='505' fill='%23a9b5c8' font-size='28'%3EImplementaci%C3%B3n, mantenci%C3%B3n y margen real.%3C/text%3E%3C/g%3E%3C/svg%3E">
+  <meta property="og:image:alt" content="Calculadora de precios. Automatización con IA. 1,30 no es 30%. Es 23,08%.">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:type" content="image/svg+xml">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Calculadora de precios | Automatización con IA">
+  <meta name="twitter:description" content="1,30 no es 30%. Es 23,08%. Calcula tu margen real y proyecta tus ingresos a 12 meses.">
+  <meta name="twitter:image" content="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='630' viewBox='0 0 1200 630'%3E%3Crect width='1200' height='630' fill='%230c1018'/%3E%3Crect x='50' y='50' width='1100' height='530' rx='28' fill='%23141b27' stroke='%232a3547' stroke-width='2'/%3E%3Cpath d='M85 120H220' stroke='%2380e2c2' stroke-width='8'/%3E%3Cg font-family='Arial,sans-serif'%3E%3Ctext x='85' y='215' fill='%23eff3fa' font-size='62' font-weight='700'%3ECalculadora de precios%3C/text%3E%3Ctext x='85' y='285' fill='%23a9b5c8' font-size='36'%3EAutomatizaci%C3%B3n con IA%3C/text%3E%3Ctext x='85' y='405' fill='%2380e2c2' font-size='54' font-weight='700'%3E1,30 no es 30%25. Es 23,08%25.%3C/text%3E%3Ctext x='85' y='505' fill='%23a9b5c8' font-size='28'%3EImplementaci%C3%B3n, mantenci%C3%B3n y margen real.%3C/text%3E%3C/g%3E%3C/svg%3E">
+  <meta name="twitter:image:alt" content="Calculadora de precios. 1,30 no es 30%. Es 23,08%.">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230c1018'/%3E%3Crect x='14' y='10' width='36' height='44' rx='7' fill='%23141b27' stroke='%2380e2c2' stroke-width='3'/%3E%3Cpath d='M22 21H42M22 33H27M37 33H42M22 43H27M37 43H42' stroke='%2380e2c2' stroke-width='4' stroke-linecap='round'/%3E%3C/svg%3E">
   <style>
     :root {
       --bg: #0c1018;
@@ -42,6 +60,7 @@
     .intro, .help, .note, footer { color: var(--muted); }
     .intro { font-size: 1rem; }
     .layout { display: grid; grid-template-columns: .95fr 1.15fr; gap: 22px; align-items: start; }
+    .layout > * { min-width: 0; }
     .panel {
       background: var(--surface);
       border: 1px solid var(--border);
@@ -52,7 +71,7 @@
     .field { min-width: 0; }
     .wide { grid-column: 1 / -1; }
     label { display: block; margin-bottom: 7px; font-size: .88rem; font-weight: 650; }
-    input, select {
+    input, select, textarea {
       width: 100%;
       min-height: 48px;
       padding: 11px 12px;
@@ -62,7 +81,8 @@
       color: var(--text);
       font: inherit;
     }
-    input:focus, select:focus, summary:focus-visible {
+    input:focus, select:focus, textarea:focus, button:focus-visible,
+    summary:focus-visible, .chart-scroll:focus-visible {
       outline: 3px solid var(--accent);
       outline-offset: 3px;
     }
@@ -87,10 +107,35 @@
     .alert p { font-size: .88rem; }
     .alert p + p { margin-top: 11px; }
     .comparison { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 15px 0; }
-    .comparison div { padding: 12px; border-radius: 9px; background: #101826; }
+    .comparison div { min-width: 0; padding: 12px; border-radius: 9px; background: #101826; }
     .comparison span { display: block; font-size: .76rem; color: var(--muted); }
-    .comparison strong { display: block; font-size: 1.7rem; }
+    .comparison strong { display: block; font-size: 1.7rem; overflow-wrap: anywhere; }
     .comparison div:last-child strong { color: var(--accent); }
+    .margin-bars { margin: 18px 0; }
+    .bar-row + .bar-row { margin-top: 13px; }
+    .bar-name { display: block; margin-bottom: 5px; color: var(--muted); font-size: .78rem; }
+    .bar-track {
+      position: relative;
+      height: 38px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--field);
+    }
+    .bar-fill { position: absolute; inset-block: 0; background: var(--blue); opacity: .34; }
+    .bar-fill.real { background: var(--accent); }
+    .bar-fill.negative { background: var(--danger); }
+    .bar-zero { position: absolute; inset-block: 0; width: 1px; background: var(--muted); }
+    .bar-value {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      padding: 0 10px;
+      font-size: .88rem;
+      font-weight: 750;
+      font-variant-numeric: tabular-nums;
+    }
     .results { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
     .card {
       padding: 20px;
@@ -112,14 +157,38 @@
       font-variant-numeric: tabular-nums;
     }
     .primary .value { color: var(--accent); }
-    .explanation { color: var(--muted); font-size: .78rem; line-height: 1.5; }
-    .detail {
-      margin-top: 18px;
-      padding-top: 18px;
-      border-top: 1px solid var(--border);
-      font-size: .86rem;
-    }
+    .explanation { color: var(--muted); font-size: .78rem; line-height: 1.5; overflow-wrap: anywhere; }
+    .detail { margin-top: 18px; padding-top: 18px; border-top: 1px solid var(--border); font-size: .86rem; }
     .detail p + p { margin-top: 9px; }
+    .chart-section { margin: 24px 0 0; padding-top: 22px; border-top: 1px solid var(--border); }
+    .chart-scroll { margin-top: 14px; overflow-x: auto; border-radius: 10px; background: var(--field); }
+    .income-chart { display: block; width: 100%; min-width: 480px; height: auto; }
+    .income-chart text { font-family: inherit; fill: var(--muted); font-size: 12px; }
+    .chart-legend { display: flex; flex-wrap: wrap; gap: 8px 18px; margin-top: 13px; padding: 0; list-style: none; }
+    .chart-legend li { display: flex; align-items: center; gap: 7px; font-size: .76rem; color: var(--muted); }
+    .swatch { display: inline-block; width: 23px; border-top: 3px solid var(--accent); }
+    .swatch.flat { border-color: var(--blue); border-top-style: dashed; }
+    .swatch.area { height: 12px; border: 1px solid #397360; background: #80e2c22e; }
+    .chart-summary { margin-top: 12px; font-size: .85rem; overflow-wrap: anywhere; }
+    .chart-summary strong { color: var(--accent); }
+    .copy-area { margin-top: 23px; padding-top: 20px; border-top: 1px solid var(--border); }
+    button {
+      min-height: 46px;
+      padding: 11px 18px;
+      border: 1px solid var(--accent);
+      border-radius: 10px;
+      background: var(--accent);
+      color: #0c201a;
+      font: inherit;
+      font-size: .9rem;
+      font-weight: 750;
+      cursor: pointer;
+    }
+    button:hover:not(:disabled) { background: #a0eed7; }
+    button:disabled { opacity: .5; cursor: not-allowed; }
+    .copy-status { min-height: 1.6em; margin-top: 9px; color: var(--accent); font-size: .8rem; }
+    .copy-fallback { margin-top: 12px; }
+    .copy-fallback textarea { min-height: 260px; resize: vertical; font-size: .85rem; }
     .references { margin-top: 22px; }
     .reference-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; }
     .reference-grid strong { display: block; font-size: 1.15rem; margin: 6px 0; }
@@ -141,9 +210,11 @@
       .fields, .results { grid-template-columns: 1fr; }
       .card { padding: 17px; }
       .reference-grid { grid-template-columns: 1fr; gap: 20px; }
+      .comparison strong { font-size: 1.4rem; }
+      .copy-area button { width: 100%; }
     }
     @media (prefers-reduced-motion: no-preference) {
-      input, select { transition: border-color .15s ease; }
+      input, select, button { transition: border-color .15s ease, background-color .15s ease; }
     }
   </style>
 </head>
@@ -237,6 +308,27 @@
               <strong id="multiplier-margin">23,08%</strong>
             </div>
           </div>
+
+          <div id="margin-bars" class="margin-bars" role="img" aria-label="Comparación de markup y margen real">
+            <div class="bar-row" aria-hidden="true">
+              <span class="bar-name">Lo que puedes confundir con margen (markup)</span>
+              <div class="bar-track">
+                <span id="markup-fill" class="bar-fill"></span>
+                <span class="bar-zero"></span>
+                <span id="markup-bar-value" class="bar-value"></span>
+              </div>
+            </div>
+            <div class="bar-row" aria-hidden="true">
+              <span class="bar-name">Tu margen real sobre el precio</span>
+              <div class="bar-track">
+                <span id="margin-fill" class="bar-fill real"></span>
+                <span class="bar-zero"></span>
+                <span id="margin-bar-value" class="bar-value"></span>
+              </div>
+            </div>
+            <p id="bar-scale" class="help"></p>
+          </div>
+
           <p>El <strong>markup se calcula sobre el costo</strong>: (precio - costo) ÷ costo. El <strong>margen se calcula sobre el precio</strong>: (precio - costo) ÷ precio.</p>
           <p id="margin-example"></p>
           <p id="target-result"></p>
@@ -296,6 +388,35 @@
             <p id="value-anchor"></p>
           </div>
         </div>
+
+        <figure id="chart-section" class="chart-section" hidden>
+          <h3 id="chart-title">Ingreso acumulado a 12 meses</h3>
+          <p class="help">El mes 0 incluye el setup. Desde el mes 1 se suma el cobro mensual estimado.</p>
+          <div class="chart-scroll" tabindex="0" role="region" aria-label="Gráfico de ingresos. Desplázate horizontalmente si es necesario.">
+            <svg id="income-chart" class="income-chart" viewBox="0 0 560 310" role="img" aria-labelledby="income-svg-title income-svg-desc"></svg>
+          </div>
+          <ul class="chart-legend" aria-label="Leyenda">
+            <li><span class="swatch" aria-hidden="true"></span>Con mantención y cobros mensuales</li>
+            <li><span class="swatch flat" aria-hidden="true"></span>Sin mantención: solo setup</li>
+            <li><span class="swatch area" aria-hidden="true"></span>Ingreso recurrente que dejas de cobrar</li>
+          </ul>
+          <figcaption>
+            <p id="chart-summary" class="chart-summary"></p>
+            <p id="chart-fees" class="help"></p>
+            <p class="help">La comparación sin mantención supone cobrar solo el setup, sin herramientas, APIs ni excedentes mensuales. El área muestra la diferencia acumulada entre escenarios; no representa utilidad.</p>
+          </figcaption>
+        </figure>
+
+        <div class="copy-area">
+          <button id="copy-quote" type="button" disabled aria-describedby="copy-status">Copiar cotización</button>
+          <p id="copy-status" class="copy-status" role="status" aria-live="polite"></p>
+          <div id="copy-fallback" class="copy-fallback" hidden>
+            <label for="quote-text">Cotización en texto plano</label>
+            <textarea id="quote-text" readonly spellcheck="false" aria-describedby="fallback-help"></textarea>
+            <p id="fallback-help" class="help">Selecciona el texto y usa la opción Copiar de tu dispositivo.</p>
+          </div>
+        </div>
+
         <p class="note">El margen considera tu tiempo de implementación y los costos mensuales ingresados. No incluye impuestos, comisiones, horas futuras de soporte ni otros costos no declarados. No equivale a utilidad neta.</p>
       </section>
     </div>
@@ -338,11 +459,13 @@
         <li>Costos anuales considerados = costo de implementación + 12 × costo mensual de herramientas y APIs. Margen anual = (ingreso anual - costos anuales) ÷ ingreso anual.</li>
         <li>El sueldo funciona como ancla comparativa. No incrementa automáticamente el precio ni supone que todo ese sueldo se convierta en ahorro.</li>
         <li>Multiplicador para un margen objetivo = 1 ÷ (1 - margen objetivo / 100). Un multiplicador de 1,30 genera 30% de markup y aproximadamente 23,08% de margen.</li>
+        <li>Las barras usan la misma escala para markup y margen. Los valores negativos se extienden hacia la izquierda desde cero.</li>
+        <li>El gráfico compara setup + mes × cobro mensual estimado con cobrar únicamente el setup. La diferencia al mes 12 incluye mantención, herramientas, APIs y excedentes previstos.</li>
         <li>Los cálculos conservan precisión interna y los montos se muestran con dos decimales. Para ingresar números, usa coma o punto decimal sin separadores de miles.</li>
       </ul>
     </details>
 
-    <footer>Los cálculos se ejecutan en tu navegador. Tus datos no se envían ni se guardan.</footer>
+    <footer>Los cálculos se ejecutan en tu navegador. Tus datos no se envían ni se guardan. El botón de copiar lleva la cotización al portapapeles de tu dispositivo.</footer>
     <noscript>
       <p class="alert danger">Activa JavaScript en tu navegador para calcular los precios.</p>
     </noscript>
@@ -367,9 +490,14 @@
         minimumFractionDigits: 2,
         maximumFractionDigits: 2
       });
+      const scientificFormat = new Intl.NumberFormat("es-CL", {
+        notation: "scientific",
+        maximumFractionDigits: 1
+      });
 
-      const money = value => "USD " + moneyFormat.format(value);
-      const percent = value => numberFormat.format(value) + "%";
+      const cleanSigns = text => text.replace(/[\u2212\u2013\u2014]/g, "-");
+      const money = value => "USD " + cleanSigns(moneyFormat.format(value));
+      const percent = value => cleanSigns(numberFormat.format(value)) + "%";
       const put = (id, text) => { $(id).textContent = text; };
 
       const definitions = [
@@ -384,6 +512,11 @@
         ["overage", "Tarifa del excedente", false]
       ];
 
+      let quote = "";
+      let revision = 0;
+      let copying = false;
+      let timer;
+
       function readValue(id) {
         const raw = $(id).value.trim();
         if (id === "salary" && raw === "") return 0;
@@ -391,7 +524,178 @@
         return Number(raw.replace(",", "."));
       }
 
+      function renderBars(markup, realMargin) {
+        const valid = Number.isFinite(markup) && Number.isFinite(realMargin);
+        $("margin-bars").hidden = !valid;
+        if (!valid) return;
+
+        const negative = markup < 0 || realMargin < 0;
+        const extent = Math.max(100, Math.abs(markup), Math.abs(realMargin));
+        const zero = negative ? 50 : 0;
+        const available = negative ? 50 : 100;
+
+        for (const [id, value] of [["markup-fill", markup], ["margin-fill", realMargin]]) {
+          const width = Math.abs(value) / extent * available;
+          $(id).style.left = (value < 0 ? zero - width : zero) + "%";
+          $(id).style.width = width + "%";
+          $(id).classList.toggle("negative", value < 0);
+        }
+        for (const line of $("margin-bars").querySelectorAll(".bar-zero")) {
+          line.style.left = zero + "%";
+        }
+
+        put("markup-bar-value", percent(markup));
+        put("margin-bar-value", percent(realMargin));
+        put("bar-scale", negative
+          ? "Escala común: " + percent(-extent) + " a " + percent(extent) + ". Cero al centro."
+          : "Escala común: 0% a " + percent(extent) + ".");
+
+        $("margin-bars").setAttribute("aria-label",
+          "Markup que puedes confundir con margen: " + percent(markup) +
+          ". Margen real: " + percent(realMargin) +
+          ". Ambas barras usan la misma escala.");
+      }
+
+      function svgElement(name, attributes = {}, text) {
+        const element = document.createElementNS("http://www.w3.org/2000/svg", name);
+        for (const [key, value] of Object.entries(attributes)) {
+          element.setAttribute(key, String(value));
+        }
+        if (text !== undefined) element.textContent = text;
+        return element;
+      }
+
+      function axisLabel(value) {
+        if (value === 0) return "0";
+        if (Math.abs(value) >= 1e9 || Math.abs(value) < .01) {
+          return cleanSigns(scientificFormat.format(value));
+        }
+        if (Math.abs(value) >= 1e6) return numberFormat.format(value / 1e6) + " mill.";
+        if (Math.abs(value) >= 1e3) return numberFormat.format(value / 1e3) + " mil";
+        return numberFormat.format(value);
+      }
+
+      function renderChart(setup, monthlyTotal, maintenanceFee) {
+        const svg = $("income-chart");
+        const annualRevenue = setup + 12 * monthlyTotal;
+        const difference = 12 * monthlyTotal;
+        const width = 560;
+        const left = 90;
+        const right = 25;
+        const top = 38;
+        const bottom = 255;
+        const plotWidth = width - left - right;
+        const plotHeight = bottom - top;
+
+        // Al menos USD 1 de escala para el escenario sin ingresos.
+        const maximum = Math.max(1, annualRevenue * 1.12);
+        const rawStep = maximum / 4;
+        const magnitude = Math.pow(10, Math.floor(Math.log10(rawStep)));
+        const fraction = rawStep / magnitude;
+        const niceFraction = [1, 2, 2.5, 5, 10].find(value => value >= fraction) || 10;
+        const step = niceFraction * magnitude;
+        const ceiling = Math.ceil(maximum / step) * step;
+        const ticks = Math.round(ceiling / step);
+        const x = month => left + month / 12 * plotWidth;
+        const y = value => bottom - value / ceiling * plotHeight;
+        const fragment = document.createDocumentFragment();
+        const add = (name, attrs, text) => {
+          const element = svgElement(name, attrs, text);
+          fragment.appendChild(element);
+          return element;
+        };
+
+        add("title", { id: "income-svg-title" }, "Ingreso acumulado de los meses 0 a 12");
+        add("desc", { id: "income-svg-desc" },
+          "Ambas series parten con " + money(setup) + " de implementación. " +
+          "Con mantención y cobros mensuales, el ingreso al mes 12 es " + money(annualRevenue) +
+          ". Sin mantención, cobrando solo el setup, permanece en " + money(setup) +
+          ". Diferencia acumulada: " + money(difference) + ".");
+
+        add("text", { x: left, y: 20 }, "Ingreso acumulado (USD)");
+
+        for (let tick = 0; tick <= ticks; tick++) {
+          const value = tick * step;
+          const position = y(value);
+          add("line", {
+            x1: left, y1: position, x2: width - right, y2: position,
+            stroke: "#2a3547", "stroke-width": 1
+          });
+          add("text", {
+            x: left - 10, y: position + 4, "text-anchor": "end"
+          }, axisLabel(value));
+        }
+
+        add("line", { x1: left, y1: top, x2: left, y2: bottom, stroke: "#a9b5c8" });
+        add("line", { x1: left, y1: bottom, x2: width - right, y2: bottom, stroke: "#a9b5c8" });
+
+        for (let month = 0; month <= 12; month++) {
+          add("line", {
+            x1: x(month), y1: bottom, x2: x(month), y2: bottom + 5, stroke: "#a9b5c8"
+          });
+          add("text", { x: x(month), y: bottom + 21, "text-anchor": "middle" }, String(month));
+        }
+        add("text", { x: left + plotWidth / 2, y: 301, "text-anchor": "middle" }, "Mes");
+
+        const points = Array.from({ length: 13 }, (_, month) => ({
+          month,
+          value: setup + month * monthlyTotal
+        }));
+        const linePath = points.map((point, index) =>
+          (index === 0 ? "M" : "L") + x(point.month) + " " + y(point.value)
+        ).join(" ");
+
+        add("path", {
+          d: linePath + " L" + x(12) + " " + y(setup) + " L" + x(0) + " " + y(setup) + " Z",
+          fill: "#80e2c2", "fill-opacity": .18
+        });
+        add("path", {
+          d: linePath, fill: "none", stroke: "#80e2c2",
+          "stroke-width": 3, "stroke-linejoin": "round"
+        });
+        add("line", {
+          x1: x(0), y1: y(setup), x2: x(12), y2: y(setup),
+          stroke: "#9dbbff", "stroke-width": 3, "stroke-dasharray": "7 5"
+        });
+
+        for (const point of points) {
+          const dot = add("circle", {
+            cx: x(point.month), cy: y(point.value), r: 3.5,
+            fill: "#80e2c2", stroke: "#0d1420", "stroke-width": 1.5
+          });
+          dot.appendChild(svgElement("title", {},
+            "Mes " + point.month + ": " + money(point.value) +
+            " con cobros mensuales; " + money(setup) + " solo setup."));
+        }
+        add("circle", { cx: x(12), cy: y(setup), r: 4, fill: "#9dbbff" });
+        svg.replaceChildren(fragment);
+
+        const summary = $("chart-summary");
+        const strong = document.createElement("strong");
+        strong.textContent = money(difference);
+        summary.replaceChildren(
+          "Al mes 12 dejas de cobrar ",
+          strong,
+          " si cobras solo el setup. Con cobros mensuales: " + money(annualRevenue) +
+          ". Solo setup: " + money(setup) + "."
+        );
+        put("chart-fees",
+          "De esa diferencia, " + money(12 * maintenanceFee) +
+          " corresponden a honorarios de mantención.");
+      }
+
+      function resetCopy() {
+        revision++;
+        quote = "";
+        $("copy-quote").disabled = true;
+        put("copy-quote", "Copiar cotización");
+        put("copy-status", "");
+        $("copy-fallback").hidden = true;
+        $("quote-text").value = "";
+      }
+
       function update() {
+        resetCopy();
         const values = {};
         const errors = [];
 
@@ -408,6 +712,8 @@
             error = label + ": ingresa un valor de hasta 1.000.000.000.000.";
           } else if (id === "multiplier" && value <= 0) {
             error = "Multiplicador: debe ser mayor que cero.";
+          } else if (id === "multiplier" && !Number.isFinite((1 - 1 / value) * 100)) {
+            error = "Multiplicador: el valor es demasiado pequeño para calcular el margen.";
           } else if (id === "target" && value >= 100) {
             error = "Margen objetivo: debe ser de cero a menos de 100%.";
           }
@@ -426,7 +732,8 @@
         }
 
         const validMultiplier = Number.isFinite(values.multiplier) &&
-          values.multiplier > 0 && values.multiplier <= 1e12;
+          values.multiplier > 0 && values.multiplier <= 1e12 &&
+          Number.isFinite((1 - 1 / values.multiplier) * 100);
 
         if (validMultiplier) {
           const markup = (values.multiplier - 1) * 100;
@@ -434,6 +741,7 @@
 
           put("markup-result", percent(markup));
           put("multiplier-margin", percent(realMargin));
+          renderBars(markup, realMargin);
           put(
             "margin-example",
             "Con un costo de " + money(100) + " y un multiplicador de " +
@@ -446,6 +754,7 @@
           put("markup-result", "Sin calcular");
           put("multiplier-margin", "Sin calcular");
           put("margin-example", "Ingresa un multiplicador válido para comparar markup y margen.");
+          renderBars(NaN, NaN);
         }
 
         if (Number.isFinite(values.target) && values.target >= 0 && values.target < 100) {
@@ -465,7 +774,11 @@
         $("validation").hidden = errors.length === 0;
         put("validation-text", errors.join(" "));
         $("results-region").hidden = errors.length > 0;
-        if (errors.length) return;
+        $("chart-section").hidden = errors.length > 0;
+        if (errors.length) {
+          put("copy-status", "Corrige los datos para copiar la cotización.");
+          return;
+        }
 
         const { tools, hours, hourly, salary, volume, multiplier, included, overage } = values;
         const rate = Number($("maintenance").value) / 100;
@@ -483,6 +796,7 @@
         const annualProfit = annualRevenue - annualCosts;
         const annualMargin = annualRevenue > 0 ? annualProfit / annualRevenue * 100 : null;
         const setupMargin = setup > 0 ? (setup - implementationCost) / setup * 100 : null;
+        const measurable = value => value !== null && Number.isFinite(value);
 
         put("setup-result", money(setup));
         put(
@@ -504,13 +818,15 @@
           integerFormat.format(blocks) + " bloques iniciados × " + money(overage) +
           " = " + money(extraCharge) + " al mes."
         );
-        put("margin-result", annualMargin === null ? "No calculable" : percent(annualMargin));
+        put("margin-result", measurable(annualMargin) ? percent(annualMargin) : "No calculable");
         put(
           "margin-explanation",
           annualMargin === null
             ? "Sin ingresos no se puede dividir el resultado por el precio."
-            : "(" + money(annualRevenue) + " de ingreso - " + money(annualCosts) +
-              " de costos) ÷ " + money(annualRevenue) + "."
+            : !Number.isFinite(annualMargin)
+              ? "Los valores ingresados exceden la precisión numérica disponible para este margen."
+              : "(" + money(annualRevenue) + " de ingreso - " + money(annualCosts) +
+                " de costos) ÷ " + money(annualRevenue) + "."
         );
         put("annual-result", money(annualRevenue));
         put(
@@ -527,8 +843,10 @@
           "setup-margin",
           setupMargin === null
             ? "Margen de implementación: no calculable porque el setup es cero."
-            : "Margen de implementación: " + percent(setupMargin) +
-              ", después de valorizar tus horas."
+            : !Number.isFinite(setupMargin)
+              ? "Margen de implementación: fuera del rango numérico disponible."
+              : "Margen de implementación: " + percent(setupMargin) +
+                ", después de valorizar tus horas."
         );
         put(
           "profit-result",
@@ -536,13 +854,17 @@
         );
 
         if (salary > 0) {
+          const monthlySalaryRatio = monthlyTotal / salary * 100;
+          const annualSalaryRatio = annualRevenue / (salary * 12) * 100;
           put(
             "value-anchor",
-            "Ancla de valor: el cobro mensual estimado equivale a " +
-            percent(monthlyTotal / salary * 100) + " del sueldo de " +
-            money(salary) + ". El ingreso del primer año equivale a " +
-            percent(annualRevenue / (salary * 12) * 100) +
-            " de 12 sueldos. Es una comparación, no un ahorro garantizado."
+            Number.isFinite(monthlySalaryRatio) && Number.isFinite(annualSalaryRatio)
+              ? "Ancla de valor: el cobro mensual estimado equivale a " +
+                percent(monthlySalaryRatio) + " del sueldo de " +
+                money(salary) + ". El ingreso del primer año equivale a " +
+                percent(annualSalaryRatio) +
+                " de 12 sueldos. Es una comparación, no un ahorro garantizado."
+              : "El sueldo ingresado es demasiado pequeño para calcular la comparación."
           );
         } else {
           put("value-anchor", "Ingresa un sueldo opcional para comparar tu cotización con el valor del rol reemplazado.");
@@ -566,11 +888,115 @@
         }
         $("loss-warning").hidden = warnings.length === 0;
         put("loss-warning", warnings.join(" "));
+
+        renderChart(setup, monthlyTotal, maintenanceFee);
+
+        quote = [
+          "COTIZACIÓN ESTIMADA - AUTOMATIZACIÓN CON IA",
+          "",
+          "Implementación (pago único): " + money(setup) + ".",
+          "Honorarios de mantención mensual: " + money(maintenanceFee) +
+            " (" + percent(rate * 100) + " del setup).",
+          "Herramientas y APIs mensuales: " + money(toolsPrice) + ".",
+          "Mensualidad base: " + money(monthly) + ".",
+          "Umbral incluido: " + integerFormat.format(included) + " operaciones al mes.",
+          "El umbral se reinicia cada mes y no se acumula.",
+          "Precio del excedente: " + money(overage) + " por cada bloque de 100 operaciones adicionales iniciado.",
+          "",
+          "PROYECCIÓN A 12 MESES",
+          "Volumen esperado: " + integerFormat.format(volume) + " operaciones al mes.",
+          "Excedente mensual estimado: " + money(extraCharge) +
+            " (" + integerFormat.format(blocks) + " bloques).",
+          "Cobro mensual estimado con excedente: " + money(monthlyTotal) + ".",
+          "Total estimado a 12 meses: " + money(annualRevenue) + ".",
+          "",
+          "El total incluye implementación y 12 mensualidades completas, con el mismo volumen cada mes.",
+          "Montos en USD. No incluye impuestos ni comisiones.",
+          "Los importes se muestran con dos decimales; el total se calcula sin redondeos intermedios."
+        ].join("\n");
+
+        $("copy-quote").disabled = copying;
       }
 
-      let timer;
+      function legacyCopy(text) {
+        const textarea = document.createElement("textarea");
+        textarea.value = text;
+        textarea.readOnly = true;
+        textarea.tabIndex = -1;
+        textarea.style.cssText = "position:fixed;top:0;left:0;width:1px;height:1px;opacity:0;font-size:16px;";
+        const previous = document.activeElement;
+        document.body.appendChild(textarea);
+        let success = false;
+        try {
+          textarea.focus({ preventScroll: true });
+          textarea.select();
+          textarea.setSelectionRange(0, textarea.value.length);
+          success = typeof document.execCommand === "function" && document.execCommand("copy");
+        } catch {
+          success = false;
+        } finally {
+          textarea.remove();
+          if (previous && typeof previous.focus === "function") {
+            previous.focus({ preventScroll: true });
+          }
+        }
+        return success;
+      }
+
+      $("copy-quote").addEventListener("click", async () => {
+        if (copying) return;
+        clearTimeout(timer);
+        update();
+        if (!quote) return;
+
+        const text = quote;
+        const copiedRevision = revision;
+        copying = true;
+        $("copy-quote").disabled = true;
+        put("copy-quote", "Copiando...");
+
+        let copied = false;
+        try {
+          if (window.isSecureContext && navigator.clipboard &&
+              typeof navigator.clipboard.writeText === "function") {
+            await navigator.clipboard.writeText(text);
+            copied = true;
+          }
+        } catch {
+          copied = false;
+        }
+        if (!copied && revision === copiedRevision) {
+          copied = legacyCopy(text);
+        }
+
+        copying = false;
+        $("copy-quote").disabled = !quote;
+
+        if (revision !== copiedRevision) {
+          put("copy-quote", "Copiar cotización");
+          put("copy-status", copied
+            ? "Se copió la cotización anterior. Los datos cambiaron; vuelve a copiar la versión actual."
+            : "Los datos cambiaron. Vuelve a copiar la cotización actual.");
+          return;
+        }
+
+        if (copied) {
+          put("copy-quote", "Cotización copiada");
+          put("copy-status", "Lista para pegar en un correo o WhatsApp.");
+        } else {
+          put("copy-quote", "Reintentar copia");
+          put("copy-status", "No se pudo copiar automáticamente. Puedes copiar el texto de abajo.");
+          $("quote-text").value = text;
+          $("copy-fallback").hidden = false;
+          $("quote-text").focus();
+          $("quote-text").select();
+          $("quote-text").setSelectionRange(0, text.length);
+        }
+      });
+
       $("calculator").addEventListener("input", () => {
         clearTimeout(timer);
+        resetCopy();
         timer = setTimeout(update, 120);
       });
       $("calculator").addEventListener("change", () => {
