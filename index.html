@@ -146,9 +146,116 @@
     @media(prefers-reduced-motion:no-preference) {
       input,select,button { transition:border-color .15s ease,background-color .15s ease; }
     }
+
+    /* ===== Sistema de espaciado y elevacion ===== */
+    :root {
+      --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:24px; --s6:32px; --s7:48px; --s8:72px;
+      --ring:0 0 0 1px rgba(128,226,194,.18);
+      --lift:0 1px 2px rgba(0,0,0,.30), 0 8px 24px -12px rgba(0,0,0,.65);
+      --lift-hi:0 1px 2px rgba(0,0,0,.35), 0 18px 44px -18px rgba(0,0,0,.80);
+      --ease:cubic-bezier(.22,.61,.36,1);
+    }
+
+    /* Fondo con profundidad y trama discreta */
+    body {
+      background:
+        radial-gradient(1100px 620px at 78% -8%, rgba(128,226,194,.075), transparent 62%),
+        radial-gradient(900px 520px at 8% 4%, rgba(157,187,255,.055), transparent 58%),
+        var(--bg);
+      background-attachment:fixed;
+    }
+    body::before {
+      content:""; position:fixed; inset:0; pointer-events:none; z-index:0; opacity:.5;
+      background-image:
+        linear-gradient(rgba(42,53,71,.16) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(42,53,71,.16) 1px, transparent 1px);
+      background-size:64px 64px;
+      mask-image:radial-gradient(circle at 50% 0%, #000 0%, transparent 72%);
+      -webkit-mask-image:radial-gradient(circle at 50% 0%, #000 0%, transparent 72%);
+    }
+    main { position:relative; z-index:1; padding-block:var(--s8) var(--s7); }
+
+    /* ===== Jerarquia tipografica ===== */
+    header p { max-width:64ch; color:var(--muted); font-size:1.05rem; }
+    .panel > h2 { letter-spacing:-.015em; font-size:1.28rem; }
+    .help { max-width:70ch; }
+
+    /* ===== Barra de avance de lectura ===== */
+    .progress { position:fixed; inset:0 0 auto 0; height:2px; z-index:40; background:transparent; }
+    .progress i {
+      display:block; height:100%; transform-origin:0 50%; transform:scaleX(0);
+      background:linear-gradient(90deg,var(--accent),var(--blue));
+    }
+    @supports (animation-timeline:scroll()) {
+      .progress i { animation:grow linear both; animation-timeline:scroll(root block); }
+      @keyframes grow { from { transform:scaleX(0); } to { transform:scaleX(1); } }
+    }
+
+    /* ===== Navegacion adherida ===== */
+    .navigation {
+      position:sticky; top:0; z-index:30;
+      margin-inline:calc(var(--s5) * -1); padding:var(--s3) var(--s5);
+      background:color-mix(in srgb, var(--bg) 82%, transparent);
+      backdrop-filter:blur(12px) saturate(140%);
+      -webkit-backdrop-filter:blur(12px) saturate(140%);
+      border-bottom:1px solid transparent;
+      transition:border-color .2s var(--ease), background-color .2s var(--ease);
+    }
+    .navigation.is-stuck { border-bottom-color:var(--border); }
+    .navigation a {
+      padding:var(--s1) 0; text-decoration-color:transparent;
+      transition:color .18s var(--ease), text-decoration-color .18s var(--ease);
+    }
+    .navigation a:hover { color:var(--accent); text-decoration-color:currentColor; }
+
+    /* ===== Superficies ===== */
+    .panel {
+      box-shadow:var(--lift);
+      transition:border-color .22s var(--ease), box-shadow .22s var(--ease);
+    }
+    .panel:hover { border-color:color-mix(in srgb, var(--accent) 26%, var(--border)); }
+    .card { transition:border-color .2s var(--ease), background-color .2s var(--ease), transform .2s var(--ease); }
+    .card:hover { border-color:color-mix(in srgb, var(--accent) 30%, var(--border)); }
+
+    /* Cifras protagonistas */
+    .card strong, .comparison strong { text-shadow:0 0 22px rgba(128,226,194,.20); }
+
+    /* Planes con foco en el recomendado */
+    .plans > * { transition:transform .22s var(--ease), box-shadow .22s var(--ease), border-color .22s var(--ease); }
+    .plans > *:hover { transform:translateY(-3px); box-shadow:var(--lift-hi); }
+
+    /* ===== Aparicion al desplazar ===== */
+    .js-reveal .reveal { opacity:0; transform:translateY(10px); }
+    .js-reveal .reveal.is-in {
+      opacity:1; transform:none;
+      transition:opacity .5s var(--ease), transform .5s var(--ease);
+    }
+
+    @media (prefers-reduced-motion:reduce) {
+      body::before { display:none; }
+      .progress i { animation:none; transform:scaleX(0); }
+      .js-reveal .reveal, .js-reveal .reveal.is-in { opacity:1; transform:none; transition:none; }
+      .plans > *:hover { transform:none; }
+    }
+    @media(max-width:480px) {
+      main { padding-block:var(--s6) var(--s6); }
+      .navigation { margin-inline:-16px; padding-inline:16px; }
+    }
+
+    /* Iconos de seccion */
+    .panel > h2, section > h2 { display:flex; align-items:center; gap:var(--s3); }
+    .h-icon {
+      flex:none; display:inline-grid; place-items:center; width:34px; height:34px; border-radius:10px;
+      color:var(--accent);
+      background:color-mix(in srgb, var(--accent) 11%, transparent);
+      border:1px solid color-mix(in srgb, var(--accent) 24%, transparent);
+    }
+    .h-icon svg { width:18px; height:18px; }
+    select, button, summary { cursor:pointer; }
   </style>
 </head>
 <body>
+<div class="progress" aria-hidden="true"><i></i></div>
 <main>
   <header>
     <div class="eyebrow">Cotiza con números claros</div>
@@ -165,7 +272,7 @@
 
   <div class="layout">
     <section class="panel" aria-labelledby="inputs-title">
-      <h2 id="inputs-title">1. Define tu proyecto</h2>
+      <h2 id="inputs-title"><span class="h-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" focusable="false"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg></span>1. Define tu proyecto</h2>
       <form id="calculator" novalidate>
         <div class="field">
           <label for="service">Plantilla de servicio</label>
@@ -290,7 +397,7 @@
     </section>
 
     <section class="panel" aria-labelledby="results-title">
-      <h2 id="results-title">2. Tu cotización estimada</h2>
+      <h2 id="results-title"><span class="h-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" focusable="false"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="6" x2="16" y2="6"/><line x1="8" y1="11" x2="8" y2="11"/><line x1="12" y1="11" x2="12" y2="11"/><line x1="16" y1="11" x2="16" y2="11"/><line x1="8" y1="15" x2="8" y2="15"/><line x1="12" y1="15" x2="12" y2="15"/><line x1="16" y1="15" x2="16" y2="18"/></svg></span>2. Tu cotización estimada</h2>
       <p id="results-invalid" class="help" hidden>Corrige los datos para actualizar la cotización y las proyecciones.</p>
       <div id="results-region">
         <div class="results">
@@ -366,7 +473,7 @@
   </div>
 
   <section class="panel section" aria-labelledby="goals-title">
-    <h2 id="goals-title">3. Tu meta de ingreso mensual</h2>
+    <h2 id="goals-title"><span class="h-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" focusable="false"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg></span>3. Tu meta de ingreso mensual</h2>
     <div class="fields">
       <div class="field">
         <label for="goal">¿Cuánto quieres facturar al mes? (USD)</label>
@@ -403,7 +510,7 @@
   </section>
 
   <section class="panel section" aria-labelledby="break-title">
-    <h2 id="break-title">4. Punto de equilibrio</h2>
+    <h2 id="break-title"><span class="h-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" focusable="false"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg></span>4. Punto de equilibrio</h2>
     <div id="break-results" class="results" hidden>
       <article class="card primary">
         <span class="card-label">Recuperación de tus horas de implementación</span>
@@ -420,14 +527,14 @@
   </section>
 
   <section class="panel section" aria-labelledby="plans-title">
-    <h2 id="plans-title">5. Tres planes para tu propuesta</h2>
+    <h2 id="plans-title"><span class="h-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" focusable="false"><path d="M12 2 2 7l10 5 10-5-10-5z"/><path d="m2 17 10 5 10-5"/><path d="m2 12 10 5 10-5"/></svg></span>5. Tres planes para tu propuesta</h2>
     <p class="help">Entrada reduce el alcance y las horas a 60%. Recomendado usa tus datos actuales. Completo amplía horas y alcance a 160%. Herramientas y volumen incluido usan factores de 70%, 100% y 150%. Valida estos supuestos antes de enviar.</p>
     <div id="plans" class="plans" hidden></div>
     <p class="note">Precios sin descuentos. La mensualidad de cada plan incluye herramientas y honorarios calculados con el mismo porcentaje de mantención. Cada plan cobra sus propios excedentes. Los alcances son borradores editables mediante tus acuerdos con el cliente.</p>
   </section>
 
   <section class="panel section" aria-labelledby="discount-title">
-    <h2 id="discount-title">6. Prueba un descuento antes de ofrecerlo</h2>
+    <h2 id="discount-title"><span class="h-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" focusable="false"><line x1="19" y1="5" x2="5" y2="19"/><circle cx="6.5" cy="6.5" r="2.5"/><circle cx="17.5" cy="17.5" r="2.5"/></svg></span>6. Prueba un descuento antes de ofrecerlo</h2>
     <p class="help">Simula el descuento sobre un cliente y lo aplica al setup, los honorarios, las herramientas facturadas y los excedentes de los primeros 12 meses. Tus costos y el alcance no cambian. No modifica la cotización, los planes ni la meta.</p>
     <div class="discount-controls">
       <label for="discount">Descuento a simular (%)</label>
@@ -451,7 +558,7 @@
   </section>
 
   <section class="panel section" aria-labelledby="save-title">
-    <h2 id="save-title">7. Guarda y comparte tu cotización</h2>
+    <h2 id="save-title"><span class="h-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" focusable="false"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg></span>7. Guarda y comparte tu cotización</h2>
     <p class="help">Tus valores válidos quedan guardados en este navegador. El enlace lleva los campos de cálculo, tu meta y el descuento simulado, y quien lo reciba puede verlos y modificarlos.</p>
     <div class="actions">
       <button id="copy-quote" type="button" disabled>Copiar cotización</button>
@@ -475,7 +582,7 @@
   </section>
 
   <section class="panel section" aria-labelledby="references-title">
-    <h2 id="references-title">Referencias de mercado</h2>
+    <h2 id="references-title"><span class="h-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" focusable="false"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg></span>Referencias de mercado</h2>
     <div class="reference-grid">
       <div><span>Implementación</span><strong>USD 1.000</strong><span>Mediana de referencia. Rango: USD 500 a USD 2.400.</span></div>
       <div><span>Mantención mensual</span><strong>USD 75 a USD 150</strong><span>Referencia para servicios de mantención.</span></div>
@@ -1245,6 +1352,39 @@
     put("storage-status",bootMessage + " " + $("storage-status").textContent);
   }
 })();
+</script>
+<script>
+  (() => {
+    const quieto = window.matchMedia("(prefers-reduced-motion:reduce)");
+
+    // Sombra de la navegacion solo cuando queda adherida
+    const nav = document.querySelector(".navigation");
+    if (nav && "IntersectionObserver" in window) {
+      const marca = document.createElement("div");
+      marca.setAttribute("aria-hidden","true");
+      marca.style.cssText = "height:1px;margin:0;padding:0;";
+      nav.parentNode.insertBefore(marca,nav);
+      new IntersectionObserver(
+        ([e]) => nav.classList.toggle("is-stuck",!e.isIntersecting),
+        {threshold:[1]}
+      ).observe(marca);
+    }
+
+    // Aparicion progresiva. Sin JS o con motion reducido, todo queda visible.
+    if (quieto.matches || !("IntersectionObserver" in window)) return;
+    const piezas = document.querySelectorAll("main > .layout > .panel, main > .panel, main > section");
+    if (!piezas.length) return;
+    document.documentElement.classList.add("js-reveal");
+    piezas.forEach(el => el.classList.add("reveal"));
+    const vigia = new IntersectionObserver((entradas,obs) => {
+      for (const e of entradas) {
+        if (!e.isIntersecting) continue;
+        e.target.classList.add("is-in");
+        obs.unobserve(e.target);
+      }
+    },{rootMargin:"0px 0px -8% 0px",threshold:.06});
+    piezas.forEach(el => vigia.observe(el));
+  })();
 </script>
 </body>
 </html>
