@@ -1,3 +1,12 @@
 salida_astra.txt
 .vercel
 node_modules
+
+# temporales de trabajo
+.playwright-cli/
+prompt_v*.txt
+salida_v*.txt
+index_backup_*.html
+index_pre_*.html
+v3.html
+*.png

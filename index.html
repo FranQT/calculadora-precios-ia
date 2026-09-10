@@ -25,216 +25,175 @@
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230c1018'/%3E%3Crect x='14' y='10' width='36' height='44' rx='7' fill='%23141b27' stroke='%2380e2c2' stroke-width='3'/%3E%3Cpath d='M22 21H42M22 33H27M37 33H42M22 43H27M37 43H42' stroke='%2380e2c2' stroke-width='4' stroke-linecap='round'/%3E%3C/svg%3E">
   <style>
     :root {
-      --bg: #0c1018;
-      --surface: #141b27;
-      --field: #0d1420;
-      --border: #2a3547;
-      --text: #eff3fa;
-      --muted: #a9b5c8;
-      --accent: #80e2c2;
-      --blue: #9dbbff;
-      --warning: #ffd18a;
-      --danger: #ffacb7;
-      --radius: 18px;
+      --bg:#0c1018; --surface:#141b27; --field:#0d1420; --border:#2a3547;
+      --text:#eff3fa; --muted:#a9b5c8; --accent:#80e2c2; --blue:#9dbbff;
+      --warning:#ffd18a; --danger:#ffacb7; --radius:18px;
     }
-    * { box-sizing: border-box; }
-    body {
-      margin: 0;
-      background: var(--bg);
-      color: var(--text);
-      font: 16px/1.55 system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    * { box-sizing:border-box; }
+    body { margin:0; background:var(--bg); color:var(--text); font:16px/1.55 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; }
+    main { width:min(1180px,100%); margin:auto; padding:44px 24px; }
+    header { max-width:830px; margin-bottom:28px; }
+    h1 { margin:10px 0 14px; font-size:clamp(2rem,5vw,3.1rem); line-height:1.12; letter-spacing:-.04em; }
+    h2 { margin:0 0 16px; font-size:1.2rem; }
+    h3 { margin:0 0 8px; font-size:1rem; }
+    p { margin:0; }
+    p + p { margin-top:10px; }
+    .eyebrow { color:var(--accent); font-size:.75rem; font-weight:750; letter-spacing:.13em; text-transform:uppercase; }
+    .intro,.help,.note,footer { color:var(--muted); }
+    .help { margin-top:7px; font-size:.79rem; line-height:1.5; }
+    .note { margin-top:18px; font-size:.81rem; }
+    .layout { display:grid; grid-template-columns:.95fr 1.15fr; gap:22px; align-items:start; }
+    .layout > *, .fields > *, .results > *, .plans > * { min-width:0; }
+    .panel { padding:24px; border:1px solid var(--border); border-radius:var(--radius); background:var(--surface); }
+    .section { margin-top:22px; }
+    .fields,.results { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+    .wide { grid-column:1/-1; }
+    fieldset { margin:0; padding:0; border:0; min-width:0; }
+    fieldset + fieldset { margin-top:24px; }
+    legend { width:100%; margin-bottom:16px; padding:18px 0 0; border-top:1px solid var(--border); color:var(--accent); font-size:.85rem; font-weight:750; }
+    label { display:block; margin-bottom:7px; font-size:.87rem; font-weight:650; }
+    input,select,textarea { width:100%; min-height:48px; padding:11px 12px; border:1px solid var(--border); border-radius:10px; background:var(--field); color:var(--text); font:inherit; }
+    input[type="range"] { padding:0; accent-color:var(--accent); border:0; background:transparent; }
+    input:focus,select:focus,textarea:focus,button:focus-visible,summary:focus-visible,.chart-scroll:focus-visible,a:focus-visible { outline:3px solid var(--accent); outline-offset:3px; }
+    input[aria-invalid="true"] { border-color:var(--danger); }
+    button { min-height:46px; padding:11px 17px; border:1px solid var(--accent); border-radius:10px; background:var(--accent); color:#0c201a; font:inherit; font-size:.9rem; font-weight:750; cursor:pointer; }
+    button:hover:not(:disabled) { background:#a0eed7; }
+    button.secondary { background:var(--field); color:var(--text); border-color:var(--border); }
+    button.secondary:hover:not(:disabled) { background:#243046; }
+    button:disabled { opacity:.5; cursor:not-allowed; }
+    .actions { display:flex; flex-wrap:wrap; gap:10px; margin-top:16px; }
+    .navigation { display:flex; flex-wrap:wrap; gap:8px 18px; margin-top:20px; }
+    a { color:var(--accent); text-underline-offset:4px; }
+    .navigation a { font-size:.83rem; }
+    .card { padding:19px; border:1px solid var(--border); border-radius:13px; background:var(--field); overflow-wrap:anywhere; }
+    .primary { border-color:#397360; background:#11261f; }
+    .card-label { display:block; color:var(--muted); font-size:.83rem; }
+    .value { display:block; margin:8px 0; font-size:clamp(1.5rem,3vw,2rem); line-height:1.2; font-weight:750; letter-spacing:-.035em; font-variant-numeric:tabular-nums; overflow-wrap:anywhere; }
+    .primary .value { color:var(--accent); }
+    .big { font-size:clamp(2rem,5vw,3rem); }
+    .explanation { color:var(--muted); font-size:.79rem; }
+    .detail { margin-top:20px; padding-top:18px; border-top:1px solid var(--border); font-size:.86rem; overflow-wrap:anywhere; }
+    .alert { margin-top:20px; padding:18px; border:1px solid; border-radius:12px; font-size:.87rem; }
+    .education { background:#1b2434; border-color:#3b5074; }
+    .education h3 { color:var(--blue); }
+    .danger { background:#321c25; border-color:#8d4657; color:var(--danger); }
+    .warning { background:#2b251c; border-color:#77603d; color:var(--warning); }
+    .comparison { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin:16px 0; }
+    .comparison div { min-width:0; padding:12px; background:#101826; border-radius:9px; }
+    .comparison span { display:block; font-size:.77rem; color:var(--muted); }
+    .comparison strong { display:block; font-size:1.65rem; overflow-wrap:anywhere; }
+    .comparison div:last-child strong { color:var(--accent); }
+    .margin-bars { margin:18px 0; }
+    .bar-row + .bar-row { margin-top:12px; }
+    .bar-name { display:block; color:var(--muted); font-size:.78rem; margin-bottom:5px; }
+    .bar-track { position:relative; height:38px; overflow:hidden; border:1px solid var(--border); border-radius:8px; background:var(--field); }
+    .bar-fill { position:absolute; inset-block:0; background:var(--blue); opacity:.34; }
+    .bar-fill.real { background:var(--accent); }
+    .bar-fill.negative { background:var(--danger); }
+    .bar-zero { position:absolute; inset-block:0; width:1px; background:var(--muted); }
+    .bar-value { position:absolute; inset:0; display:flex; align-items:center; padding:0 10px; font-weight:750; font-size:.87rem; }
+    figure { margin:0; }
+    .chart-section { margin-top:24px; padding-top:22px; border-top:1px solid var(--border); }
+    .chart-scroll { margin-top:14px; overflow-x:auto; border-radius:10px; background:var(--field); }
+    .income-chart { display:block; width:100%; min-width:480px; height:auto; }
+    .income-chart text { font-family:inherit; fill:var(--muted); font-size:12px; }
+    .chart-legend { display:flex; flex-wrap:wrap; gap:8px 18px; padding:0; list-style:none; }
+    .chart-legend li { display:flex; align-items:center; gap:7px; color:var(--muted); font-size:.76rem; }
+    .swatch { display:inline-block; width:23px; border-top:3px solid var(--accent); flex-shrink:0; }
+    .swatch.flat { border-color:var(--blue); border-top-style:dashed; }
+    .swatch.area { height:12px; border:1px solid #397360; background:#80e2c22e; }
+    .chart-summary { font-size:.85rem; overflow-wrap:anywhere; }
+    .plans { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-top:20px; }
+    .plan { display:flex; flex-direction:column; position:relative; }
+    .badge { display:inline-block; align-self:flex-start; padding:3px 9px; margin-bottom:12px; border-radius:20px; color:var(--accent); background:#203e32; font-size:.72rem; font-weight:750; }
+    .plan ul { padding-left:19px; font-size:.85rem; color:var(--muted); flex:1; }
+    .plan li + li { margin-top:8px; }
+    .plan .value { font-size:1.6rem; }
+    .table-scroll { overflow-x:auto; margin-top:18px; }
+    table { width:100%; border-collapse:collapse; font-size:.86rem; font-variant-numeric:tabular-nums; }
+    th,td { padding:12px 10px; text-align:right; border-bottom:1px solid var(--border); }
+    th:first-child,td:first-child { text-align:left; }
+    th { color:var(--muted); font-weight:650; }
+    caption { text-align:left; color:var(--muted); font-size:.8rem; margin-bottom:8px; }
+    .discount-controls { max-width:560px; margin-top:18px; }
+    .status { min-height:1.5em; margin-top:10px; color:var(--accent); font-size:.8rem; }
+    textarea { min-height:210px; resize:vertical; font-size:.85rem; }
+    .reference-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:18px; }
+    .reference-grid strong { display:block; margin:6px 0; font-size:1.15rem; }
+    .reference-grid span { color:var(--muted); font-size:.82rem; }
+    details { margin-top:22px; }
+    summary { cursor:pointer; font-weight:650; }
+    details ul { color:var(--muted); font-size:.86rem; padding-left:20px; }
+    details li + li { margin-top:10px; }
+    footer { margin-top:24px; font-size:.79rem; }
+    [hidden] { display:none !important; }
+    .scroll-hint { display:none; }
+    @media(max-width:640px) { .scroll-hint { display:block; } }
+    @media(max-width:880px) {
+      .layout { grid-template-columns:1fr; }
+      .reference-grid { grid-template-columns:1fr 1fr; }
+      .plans { grid-template-columns:1fr; }
     }
-    main { width: min(1180px, 100%); margin: auto; padding: 44px 24px; }
-    header { max-width: 790px; margin-bottom: 30px; }
-    .eyebrow {
-      color: var(--accent);
-      font-size: .75rem;
-      font-weight: 750;
-      letter-spacing: .13em;
-      text-transform: uppercase;
+    @media(max-width:480px) {
+      main { padding:28px 16px; }
+      .panel { padding:18px; }
+      .fields,.results,.reference-grid { grid-template-columns:1fr; }
+      .comparison strong { font-size:1.35rem; }
+      .actions button { width:100%; }
+      th,td { padding:10px 6px; }
+      th:not(:first-child),td:not(:first-child) { white-space:nowrap; }
     }
-    h1 { margin: 10px 0; font-size: clamp(2rem, 5vw, 3.1rem); line-height: 1.12; letter-spacing: -.04em; }
-    h2 { margin: 0 0 18px; font-size: 1.18rem; }
-    h3 { margin: 0 0 8px; font-size: .97rem; }
-    p { margin: 0; }
-    .intro, .help, .note, footer { color: var(--muted); }
-    .intro { font-size: 1rem; }
-    .layout { display: grid; grid-template-columns: .95fr 1.15fr; gap: 22px; align-items: start; }
-    .layout > * { min-width: 0; }
-    .panel {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 24px;
-    }
-    .fields { display: grid; grid-template-columns: 1fr 1fr; gap: 19px 16px; }
-    .field { min-width: 0; }
-    .wide { grid-column: 1 / -1; }
-    label { display: block; margin-bottom: 7px; font-size: .88rem; font-weight: 650; }
-    input, select, textarea {
-      width: 100%;
-      min-height: 48px;
-      padding: 11px 12px;
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      background: var(--field);
-      color: var(--text);
-      font: inherit;
-    }
-    input:focus, select:focus, textarea:focus, button:focus-visible,
-    summary:focus-visible, .chart-scroll:focus-visible {
-      outline: 3px solid var(--accent);
-      outline-offset: 3px;
-    }
-    input[aria-invalid="true"] { border-color: var(--danger); }
-    .help { margin-top: 6px; font-size: .77rem; line-height: 1.45; }
-    .section-label {
-      grid-column: 1 / -1;
-      padding-top: 18px;
-      border-top: 1px solid var(--border);
-      color: var(--accent);
-      font-size: .78rem;
-      font-weight: 700;
-      letter-spacing: .07em;
-      text-transform: uppercase;
-    }
-    .alert { margin-top: 22px; padding: 19px; border-radius: 12px; border: 1px solid; }
-    .education { background: #1b2434; border-color: #3b5074; }
-    .education h3 { color: var(--blue); }
-    .danger { background: #321c25; border-color: #8d4657; }
-    .danger h3 { color: var(--danger); }
-    .warning { background: #2b251c; border-color: #77603d; color: var(--warning); }
-    .alert p { font-size: .88rem; }
-    .alert p + p { margin-top: 11px; }
-    .comparison { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 15px 0; }
-    .comparison div { min-width: 0; padding: 12px; border-radius: 9px; background: #101826; }
-    .comparison span { display: block; font-size: .76rem; color: var(--muted); }
-    .comparison strong { display: block; font-size: 1.7rem; overflow-wrap: anywhere; }
-    .comparison div:last-child strong { color: var(--accent); }
-    .margin-bars { margin: 18px 0; }
-    .bar-row + .bar-row { margin-top: 13px; }
-    .bar-name { display: block; margin-bottom: 5px; color: var(--muted); font-size: .78rem; }
-    .bar-track {
-      position: relative;
-      height: 38px;
-      overflow: hidden;
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      background: var(--field);
-    }
-    .bar-fill { position: absolute; inset-block: 0; background: var(--blue); opacity: .34; }
-    .bar-fill.real { background: var(--accent); }
-    .bar-fill.negative { background: var(--danger); }
-    .bar-zero { position: absolute; inset-block: 0; width: 1px; background: var(--muted); }
-    .bar-value {
-      position: absolute;
-      inset: 0;
-      display: flex;
-      align-items: center;
-      padding: 0 10px;
-      font-size: .88rem;
-      font-weight: 750;
-      font-variant-numeric: tabular-nums;
-    }
-    .results { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
-    .card {
-      padding: 20px;
-      border: 1px solid var(--border);
-      border-radius: 13px;
-      background: var(--field);
-      min-width: 0;
-    }
-    .card.primary { border-color: #397360; background: #11261f; }
-    .card-label { display: block; color: var(--muted); font-size: .83rem; }
-    .value {
-      display: block;
-      margin: 8px 0;
-      font-size: clamp(1.5rem, 3vw, 2rem);
-      line-height: 1.2;
-      font-weight: 750;
-      letter-spacing: -.035em;
-      overflow-wrap: anywhere;
-      font-variant-numeric: tabular-nums;
-    }
-    .primary .value { color: var(--accent); }
-    .explanation { color: var(--muted); font-size: .78rem; line-height: 1.5; overflow-wrap: anywhere; }
-    .detail { margin-top: 18px; padding-top: 18px; border-top: 1px solid var(--border); font-size: .86rem; }
-    .detail p + p { margin-top: 9px; }
-    .chart-section { margin: 24px 0 0; padding-top: 22px; border-top: 1px solid var(--border); }
-    .chart-scroll { margin-top: 14px; overflow-x: auto; border-radius: 10px; background: var(--field); }
-    .income-chart { display: block; width: 100%; min-width: 480px; height: auto; }
-    .income-chart text { font-family: inherit; fill: var(--muted); font-size: 12px; }
-    .chart-legend { display: flex; flex-wrap: wrap; gap: 8px 18px; margin-top: 13px; padding: 0; list-style: none; }
-    .chart-legend li { display: flex; align-items: center; gap: 7px; font-size: .76rem; color: var(--muted); }
-    .swatch { display: inline-block; width: 23px; border-top: 3px solid var(--accent); }
-    .swatch.flat { border-color: var(--blue); border-top-style: dashed; }
-    .swatch.area { height: 12px; border: 1px solid #397360; background: #80e2c22e; }
-    .chart-summary { margin-top: 12px; font-size: .85rem; overflow-wrap: anywhere; }
-    .chart-summary strong { color: var(--accent); }
-    .copy-area { margin-top: 23px; padding-top: 20px; border-top: 1px solid var(--border); }
-    button {
-      min-height: 46px;
-      padding: 11px 18px;
-      border: 1px solid var(--accent);
-      border-radius: 10px;
-      background: var(--accent);
-      color: #0c201a;
-      font: inherit;
-      font-size: .9rem;
-      font-weight: 750;
-      cursor: pointer;
-    }
-    button:hover:not(:disabled) { background: #a0eed7; }
-    button:disabled { opacity: .5; cursor: not-allowed; }
-    .copy-status { min-height: 1.6em; margin-top: 9px; color: var(--accent); font-size: .8rem; }
-    .copy-fallback { margin-top: 12px; }
-    .copy-fallback textarea { min-height: 260px; resize: vertical; font-size: .85rem; }
-    .references { margin-top: 22px; }
-    .reference-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; }
-    .reference-grid strong { display: block; font-size: 1.15rem; margin: 6px 0; }
-    .reference-grid span { color: var(--muted); font-size: .82rem; }
-    .note { font-size: .8rem; margin-top: 18px; }
-    details { margin-top: 22px; }
-    summary { cursor: pointer; font-weight: 650; }
-    details ul { padding-left: 20px; color: var(--muted); font-size: .86rem; }
-    details li + li { margin-top: 9px; }
-    footer { margin-top: 24px; font-size: .78rem; }
-    [hidden] { display: none !important; }
-    @media (max-width: 880px) {
-      .layout { grid-template-columns: 1fr; }
-      .reference-grid { grid-template-columns: 1fr 1fr; }
-    }
-    @media (max-width: 480px) {
-      main { padding: 28px 16px; }
-      .panel { padding: 18px; }
-      .fields, .results { grid-template-columns: 1fr; }
-      .card { padding: 17px; }
-      .reference-grid { grid-template-columns: 1fr; gap: 20px; }
-      .comparison strong { font-size: 1.4rem; }
-      .copy-area button { width: 100%; }
-    }
-    @media (prefers-reduced-motion: no-preference) {
-      input, select, button { transition: border-color .15s ease, background-color .15s ease; }
+    @media(prefers-reduced-motion:no-preference) {
+      input,select,button { transition:border-color .15s ease,background-color .15s ease; }
     }
   </style>
 </head>
 <body>
-  <main>
-    <header>
-      <div class="eyebrow">Cotiza con números claros</div>
-      <h1>¿Cuánto cobrar por tu automatización con IA?</h1>
-      <p class="intro">Calcula implementación, mantención y uso adicional. Revisa tu margen antes de enviar la cotización. Todos los montos están en USD.</p>
-    </header>
+<main>
+  <header>
+    <div class="eyebrow">Cotiza con números claros</div>
+    <h1>¿Cuánto cobrar por tu automatización con IA?</h1>
+    <p class="intro">Arma tu oferta, calcula implementación y mantención, y descubre cuántos clientes necesitas para tu meta mensual. Todos los montos están en USD.</p>
+    <nav class="navigation" aria-label="Secciones de la calculadora">
+      <a href="#inputs-title">Proyecto</a>
+      <a href="#goals-title">Meta mensual</a>
+      <a href="#plans-title">Tres planes</a>
+      <a href="#discount-title">Descuentos</a>
+      <a href="#save-title">Guardar y compartir</a>
+    </nav>
+  </header>
 
-    <div class="layout">
-      <section class="panel" aria-labelledby="inputs-title">
-        <h2 id="inputs-title">Datos de tu proyecto</h2>
-        <form id="calculator" novalidate>
+  <div class="layout">
+    <section class="panel" aria-labelledby="inputs-title">
+      <h2 id="inputs-title">1. Define tu proyecto</h2>
+      <form id="calculator" novalidate>
+        <div class="field">
+          <label for="service">Plantilla de servicio</label>
+          <select id="service">
+            <option value="custom">Proyecto personalizado</option>
+            <option value="whatsapp">Chatbot o agente de WhatsApp</option>
+            <option value="automation">Automatización de procesos con n8n o Make</option>
+            <option value="agent">Agente de IA a medida</option>
+            <option value="web">Sitio web o landing</option>
+            <option value="crm">Integración con CRM</option>
+            <option value="audit">Diagnóstico o auditoría</option>
+          </select>
+          <p id="preset-help" class="help">Seleccionar una plantilla reemplaza horas, plataforma fija, costo por operación, volumen, operaciones incluidas, mantención y tarifa del excedente. Puedes ajustar todo después.</p>
+          <p class="help">Son supuestos de partida y puedes editarlos todos. Ninguna cifra viene de un estudio de mercado. La plantilla no toca tu valor hora, multiplicador, sueldo, margen objetivo ni meta.</p>
+        </div>
+
+        <fieldset>
+          <legend>Costos e implementación</legend>
           <div class="fields">
             <div class="field wide">
-              <label for="tools">Herramientas y APIs al mes (USD)</label>
+              <label for="tools">Plataforma fija al mes (USD)</label>
               <input id="tools" type="text" inputmode="decimal" value="80" aria-describedby="tools-help" autocomplete="off">
-              <p class="help" id="tools-help">Incluye el costo total esperado para el volumen que ingreses.</p>
+              <p id="tools-help" class="help">Lo que pagas al mes aunque no proceses nada, como suscripciones, hosting y licencias.</p>
+            </div>
+            <div class="field wide">
+              <label for="unitcost">Costo por operación (USD)</label>
+              <input id="unitcost" type="text" inputmode="decimal" value="0" aria-describedby="unitcost-help" autocomplete="off">
+              <p id="unitcost-help" class="help">Lo que te cuesta a ti cada operación, sea un mensaje entregado, un crédito de la plataforma o una llamada al modelo. Es distinto de la tarifa que le cobras al cliente por excedente.</p>
             </div>
             <div class="field">
               <label for="hours">Horas de implementación</label>
@@ -247,25 +206,24 @@
             <div class="field wide">
               <label for="salary">Sueldo mensual del rol reemplazado (USD)</label>
               <input id="salary" type="text" inputmode="decimal" placeholder="Opcional, por ejemplo 1200" aria-describedby="salary-help" autocomplete="off">
-              <p class="help" id="salary-help">Un valor mayor que cero activa el escenario de reemplazo de un rol. Se usa como ancla de valor.</p>
-            </div>
-            <div class="field wide">
-              <label for="volume">Operaciones mensuales esperadas</label>
-              <input id="volume" type="text" inputmode="numeric" value="5000" aria-describedby="volume-help" autocomplete="off">
-              <p class="help" id="volume-help">Una operación es una ejecución o acción facturable, según lo que acuerdes con el cliente.</p>
+              <p id="salary-help" class="help">Un valor mayor que cero habilita mantención de hasta 50%. Es un ancla comparativa, no modifica el setup.</p>
             </div>
             <div class="field">
               <label for="multiplier">Multiplicador para cotizar</label>
               <input id="multiplier" type="text" inputmode="decimal" value="1.30" aria-describedby="multiplier-help" autocomplete="off">
-              <p class="help" id="multiplier-help">Por ejemplo, 1.30 o 1,30. Se aplica a los costos.</p>
+              <p id="multiplier-help" class="help">Por ejemplo, 1.30 o 1,30. Se aplica a los costos.</p>
             </div>
             <div class="field">
               <label for="target">Margen objetivo (%)</label>
               <input id="target" type="text" inputmode="decimal" value="30" aria-describedby="target-help" autocomplete="off">
-              <p class="help" id="target-help">Debe ser menor que 100%. No cambia tu multiplicador automáticamente.</p>
+              <p id="target-help" class="help">Menor que 100%. No cambia tu multiplicador automáticamente.</p>
             </div>
+          </div>
+        </fieldset>
 
-            <div class="section-label">Mantención y consumo</div>
+        <fieldset>
+          <legend>Mantención y consumo</legend>
+          <div class="fields">
             <div class="field wide">
               <label for="maintenance">Mantención como porcentaje del setup</label>
               <select id="maintenance" aria-describedby="maintenance-help">
@@ -277,7 +235,12 @@
                 <option value="40" data-role>40% · Reemplazo de un rol</option>
                 <option value="50" data-role>50% · Reemplazo de un rol</option>
               </select>
-              <p class="help" id="maintenance-help">Honorarios de 10% a 20% del setup, o hasta 50% si reemplaza un rol. Herramientas y APIs se cobran aparte dentro de la mensualidad.</p>
+              <p id="maintenance-help" class="help">Honorarios de 10% a 20% del setup, o hasta 50% si reemplaza un rol. Herramientas y APIs se suman dentro de la mensualidad.</p>
+            </div>
+            <div class="field wide">
+              <label for="volume">Operaciones mensuales esperadas</label>
+              <input id="volume" type="text" inputmode="numeric" value="5000" aria-describedby="volume-help" autocomplete="off">
+              <p id="volume-help" class="help">Una operación es una ejecución o acción facturable acordada con el cliente. Para webs o auditorías sin consumo, puedes usar cero.</p>
             </div>
             <div class="field">
               <label for="included">Operaciones incluidas al mes</label>
@@ -286,726 +249,1002 @@
             <div class="field">
               <label for="overage">USD por cada 100 adicionales</label>
               <input id="overage" type="text" inputmode="decimal" value="1" aria-describedby="overage-help" autocomplete="off">
-              <p class="help" id="overage-help">Se cobra cada bloque de 100 iniciado.</p>
+              <p id="overage-help" class="help">Se cobra cada bloque de 100 iniciado.</p>
             </div>
           </div>
-        </form>
+        </fieldset>
+      </form>
 
-        <div id="validation" class="alert danger" role="alert" hidden>
-          <h3>Revisa los datos ingresados</h3>
-          <p id="validation-text"></p>
-        </div>
-
-        <aside class="alert education" aria-labelledby="margin-title">
-          <h3 id="margin-title">Markup no es lo mismo que margen</h3>
-          <div class="comparison">
-            <div>
-              <span>Markup que puedes confundir con margen</span>
-              <strong id="markup-result">30%</strong>
-            </div>
-            <div>
-              <span>Margen real de ese multiplicador</span>
-              <strong id="multiplier-margin">23,08%</strong>
-            </div>
-          </div>
-
-          <div id="margin-bars" class="margin-bars" role="img" aria-label="Comparación de markup y margen real">
-            <div class="bar-row" aria-hidden="true">
-              <span class="bar-name">Lo que puedes confundir con margen (markup)</span>
-              <div class="bar-track">
-                <span id="markup-fill" class="bar-fill"></span>
-                <span class="bar-zero"></span>
-                <span id="markup-bar-value" class="bar-value"></span>
-              </div>
-            </div>
-            <div class="bar-row" aria-hidden="true">
-              <span class="bar-name">Tu margen real sobre el precio</span>
-              <div class="bar-track">
-                <span id="margin-fill" class="bar-fill real"></span>
-                <span class="bar-zero"></span>
-                <span id="margin-bar-value" class="bar-value"></span>
-              </div>
-            </div>
-            <p id="bar-scale" class="help"></p>
-          </div>
-
-          <p>El <strong>markup se calcula sobre el costo</strong>: (precio - costo) ÷ costo. El <strong>margen se calcula sobre el precio</strong>: (precio - costo) ÷ precio.</p>
-          <p id="margin-example"></p>
-          <p id="target-result"></p>
-        </aside>
-      </section>
-
-      <section class="panel" aria-labelledby="results-title">
-        <h2 id="results-title">Tu cotización estimada</h2>
-        <div id="results-region" aria-live="polite" aria-atomic="true">
-          <div class="results">
-            <article class="card primary">
-              <span class="card-label">Implementación sugerida</span>
-              <output id="setup-result" class="value"></output>
-              <p id="setup-explanation" class="explanation"></p>
-            </article>
-            <article class="card primary">
-              <span class="card-label">Mensualidad base sugerida</span>
-              <output id="monthly-result" class="value"></output>
-              <p id="monthly-explanation" class="explanation"></p>
-            </article>
-            <article class="card">
-              <span class="card-label">Operaciones incluidas al mes</span>
-              <output id="included-result" class="value"></output>
-              <p class="explanation">Umbral contratado. Se reinicia cada mes y no se acumula.</p>
-            </article>
-            <article class="card">
-              <span class="card-label">Precio del excedente</span>
-              <output id="overage-result" class="value"></output>
-              <p id="overage-explanation" class="explanation"></p>
-            </article>
-            <article class="card">
-              <span class="card-label">Margen real proyectado a 12 meses</span>
-              <output id="margin-result" class="value"></output>
-              <p id="margin-explanation" class="explanation"></p>
-            </article>
-            <article class="card">
-              <span class="card-label">Ingreso proyectado a 12 meses</span>
-              <output id="annual-result" class="value"></output>
-              <p id="annual-explanation" class="explanation"></p>
-            </article>
-          </div>
-
-          <div id="zero-warning" class="alert danger" role="alert" hidden>
-            <h3>Mensualidad en cero: el trabajo futuro es gratis</h3>
-            <p>Sin mantención cobrada, los ajustes, fallas y soporte que asumas saldrán de tu tiempo. Define un cobro recurrente o cotiza cada intervención por separado.</p>
-          </div>
-          <div id="no-maintenance-warning" class="alert danger" role="alert" hidden>
-            <h3>No estás cobrando honorarios de mantención</h3>
-            <p>La mensualidad solo contempla herramientas y APIs con tu multiplicador. No hay un cargo específico por soporte, ajustes ni seguimiento.</p>
-          </div>
-          <div id="loss-warning" class="alert warning" role="status" hidden></div>
-
-          <div class="detail">
-            <p id="monthly-total"></p>
-            <p id="setup-margin"></p>
-            <p id="profit-result"></p>
-            <p id="value-anchor"></p>
-          </div>
-        </div>
-
-        <figure id="chart-section" class="chart-section" hidden>
-          <h3 id="chart-title">Ingreso acumulado a 12 meses</h3>
-          <p class="help">El mes 0 incluye el setup. Desde el mes 1 se suma el cobro mensual estimado.</p>
-          <div class="chart-scroll" tabindex="0" role="region" aria-label="Gráfico de ingresos. Desplázate horizontalmente si es necesario.">
-            <svg id="income-chart" class="income-chart" viewBox="0 0 560 310" role="img" aria-labelledby="income-svg-title income-svg-desc"></svg>
-          </div>
-          <ul class="chart-legend" aria-label="Leyenda">
-            <li><span class="swatch" aria-hidden="true"></span>Con mantención y cobros mensuales</li>
-            <li><span class="swatch flat" aria-hidden="true"></span>Sin mantención: solo setup</li>
-            <li><span class="swatch area" aria-hidden="true"></span>Ingreso recurrente que dejas de cobrar</li>
-          </ul>
-          <figcaption>
-            <p id="chart-summary" class="chart-summary"></p>
-            <p id="chart-fees" class="help"></p>
-            <p class="help">La comparación sin mantención supone cobrar solo el setup, sin herramientas, APIs ni excedentes mensuales. El área muestra la diferencia acumulada entre escenarios; no representa utilidad.</p>
-          </figcaption>
-        </figure>
-
-        <div class="copy-area">
-          <button id="copy-quote" type="button" disabled aria-describedby="copy-status">Copiar cotización</button>
-          <p id="copy-status" class="copy-status" role="status" aria-live="polite"></p>
-          <div id="copy-fallback" class="copy-fallback" hidden>
-            <label for="quote-text">Cotización en texto plano</label>
-            <textarea id="quote-text" readonly spellcheck="false" aria-describedby="fallback-help"></textarea>
-            <p id="fallback-help" class="help">Selecciona el texto y usa la opción Copiar de tu dispositivo.</p>
-          </div>
-        </div>
-
-        <p class="note">El margen considera tu tiempo de implementación y los costos mensuales ingresados. No incluye impuestos, comisiones, horas futuras de soporte ni otros costos no declarados. No equivale a utilidad neta.</p>
-      </section>
-    </div>
-
-    <section class="panel references" aria-labelledby="references-title">
-      <h2 id="references-title">Referencias de mercado</h2>
-      <div class="reference-grid">
-        <div>
-          <span>Implementación</span>
-          <strong>USD 1.000</strong>
-          <span>Mediana de referencia. Rango: USD 500 a USD 2.400.</span>
-        </div>
-        <div>
-          <span>Mantención mensual</span>
-          <strong>USD 75 a USD 150</strong>
-          <span>Referencia para servicios de mantención.</span>
-        </div>
-        <div>
-          <span>Si reemplaza un rol</span>
-          <strong>USD 150 a USD 480</strong>
-          <span>Referencia mensual para ese escenario.</span>
-        </div>
-        <div>
-          <span>Ejemplo de consumo</span>
-          <strong>5.000 operaciones</strong>
-          <span>Incluidas al mes, más USD 1 por cada 100 adicionales.</span>
-        </div>
+      <div id="validation" class="alert danger" role="alert" hidden>
+        <h3>Revisa los datos ingresados</h3>
+        <p id="validation-text"></p>
       </div>
-      <p class="note">Valores orientativos proporcionados para esta calculadora, sin fuente ni fecha de relevamiento. No son mínimos, máximos ni tarifas garantizadas. No ajustan automáticamente tu cotización.</p>
+
+      <aside class="alert education" aria-labelledby="margin-title">
+        <h3 id="margin-title">Markup no es lo mismo que margen</h3>
+        <div class="comparison">
+          <div><span>Markup sobre el costo</span><strong id="markup-result">30%</strong></div>
+          <div><span>Margen real sobre el precio</span><strong id="multiplier-margin">23,08%</strong></div>
+        </div>
+        <div id="margin-bars" class="margin-bars" role="img" aria-label="Comparación de markup y margen real">
+          <div class="bar-row" aria-hidden="true">
+            <span class="bar-name">Lo que puedes confundir con margen (markup)</span>
+            <div class="bar-track">
+              <span id="markup-fill" class="bar-fill"></span><span class="bar-zero"></span>
+              <span id="markup-bar-value" class="bar-value"></span>
+            </div>
+          </div>
+          <div class="bar-row" aria-hidden="true">
+            <span class="bar-name">Tu margen real sobre el precio</span>
+            <div class="bar-track">
+              <span id="margin-fill" class="bar-fill real"></span><span class="bar-zero"></span>
+              <span id="margin-bar-value" class="bar-value"></span>
+            </div>
+          </div>
+          <p id="bar-scale" class="help"></p>
+        </div>
+        <p>El <strong>markup se calcula sobre el costo</strong>: (precio - costo) ÷ costo. El <strong>margen se calcula sobre el precio</strong>: (precio - costo) ÷ precio.</p>
+        <p id="margin-example"></p>
+        <p id="target-result"></p>
+      </aside>
     </section>
 
-    <details class="panel">
-      <summary>Cómo se calculan los resultados</summary>
-      <ul>
-        <li>Costo de implementación = horas estimadas × tu valor hora. Setup sugerido = ese costo × tu multiplicador.</li>
-        <li>Honorarios de mantención = setup × porcentaje seleccionado. Mensualidad base = honorarios + costo mensual de herramientas y APIs × tu multiplicador.</li>
-        <li>El porcentaje de mantención se aplica a los honorarios. El total mensual puede superar ese porcentaje al incorporar herramientas y APIs.</li>
-        <li>Excedente = operaciones sobre el umbral, divididas por 100 y redondeadas hacia arriba, por la tarifa de cada bloque. Bajo el umbral no se cobra excedente.</li>
-        <li>Ingreso anual = setup + 12 × (mensualidad base + excedente mensual). Supone 12 mensualidades completas y el mismo volumen cada mes.</li>
-        <li>Costos anuales considerados = costo de implementación + 12 × costo mensual de herramientas y APIs. Margen anual = (ingreso anual - costos anuales) ÷ ingreso anual.</li>
-        <li>El sueldo funciona como ancla comparativa. No incrementa automáticamente el precio ni supone que todo ese sueldo se convierta en ahorro.</li>
-        <li>Multiplicador para un margen objetivo = 1 ÷ (1 - margen objetivo / 100). Un multiplicador de 1,30 genera 30% de markup y aproximadamente 23,08% de margen.</li>
-        <li>Las barras usan la misma escala para markup y margen. Los valores negativos se extienden hacia la izquierda desde cero.</li>
-        <li>El gráfico compara setup + mes × cobro mensual estimado con cobrar únicamente el setup. La diferencia al mes 12 incluye mantención, herramientas, APIs y excedentes previstos.</li>
-        <li>Los cálculos conservan precisión interna y los montos se muestran con dos decimales. Para ingresar números, usa coma o punto decimal sin separadores de miles.</li>
-      </ul>
-    </details>
+    <section class="panel" aria-labelledby="results-title">
+      <h2 id="results-title">2. Tu cotización estimada</h2>
+      <p id="results-invalid" class="help" hidden>Corrige los datos para actualizar la cotización y las proyecciones.</p>
+      <div id="results-region">
+        <div class="results">
+          <article class="card primary">
+            <span class="card-label">Implementación sugerida</span>
+            <output id="setup-result" class="value"></output>
+            <p id="setup-explanation" class="explanation"></p>
+          </article>
+          <article class="card primary">
+            <span class="card-label">Mensualidad base sugerida</span>
+            <output id="monthly-result" class="value"></output>
+            <p id="monthly-explanation" class="explanation"></p>
+          </article>
+          <article class="card">
+            <span class="card-label">Operaciones incluidas al mes</span>
+            <output id="included-result" class="value"></output>
+            <p class="explanation">Umbral contratado. Se reinicia cada mes y no se acumula.</p>
+          </article>
+          <article class="card">
+            <span class="card-label">Precio del excedente</span>
+            <output id="overage-result" class="value"></output>
+            <p id="overage-explanation" class="explanation"></p>
+          </article>
+          <article class="card">
+            <span class="card-label">Margen real proyectado a 12 meses</span>
+            <output id="margin-result" class="value"></output>
+            <p id="margin-explanation" class="explanation"></p>
+          </article>
+          <article class="card">
+            <span class="card-label">Ingreso proyectado a 12 meses</span>
+            <output id="annual-result" class="value"></output>
+            <p id="annual-explanation" class="explanation"></p>
+          </article>
+        </div>
 
-    <footer>Los cálculos se ejecutan en tu navegador. Tus datos no se envían ni se guardan. El botón de copiar lleva la cotización al portapapeles de tu dispositivo.</footer>
-    <noscript>
-      <p class="alert danger">Activa JavaScript en tu navegador para calcular los precios.</p>
-    </noscript>
-  </main>
+        <div id="zero-warning" class="alert danger" hidden>
+          <h3>Mensualidad en cero: define qué pasa después de la entrega</h3>
+          <p>Si es un proyecto puntual, deja el cierre por escrito. Los ajustes, fallas y soporte posteriores deben tener un cobro recurrente o cotizarse por separado.</p>
+        </div>
+        <div id="no-maintenance-warning" class="alert danger" hidden>
+          <h3>No estás cobrando honorarios de mantención</h3>
+          <p>La mensualidad solo contempla herramientas y APIs con tu multiplicador. No hay un cargo específico por soporte, ajustes ni seguimiento.</p>
+        </div>
+        <div id="loss-warning" class="alert warning" hidden></div>
+        <div class="detail">
+          <p id="monthly-total"></p>
+          <p id="setup-margin"></p>
+          <p id="profit-result"></p>
+          <p id="value-anchor"></p>
+        </div>
+      </div>
 
-  <script>
-    (() => {
-      "use strict";
+      <figure id="chart-section" class="chart-section" hidden>
+        <h3>Ingreso acumulado a 12 meses</h3>
+        <p class="help">Un cliente. El mes 0 incluye el setup. Desde el mes 1 se suma el cobro mensual estimado.</p>
+        <div class="chart-scroll" tabindex="0" role="region" aria-label="Gráfico de ingresos. Desplázate horizontalmente si es necesario.">
+          <svg id="income-chart" class="income-chart" viewBox="0 0 560 310" role="img" aria-labelledby="income-svg-title income-svg-desc"></svg>
+        </div>
+        <p class="help scroll-hint">Desliza el gráfico hacia el lado para ver los 12 meses.</p>
+        <ul class="chart-legend" aria-label="Leyenda">
+          <li><span class="swatch" aria-hidden="true"></span>Con mantención y cobros mensuales</li>
+          <li><span class="swatch flat" aria-hidden="true"></span>Sin mantención: solo setup</li>
+          <li><span class="swatch area" aria-hidden="true"></span>Ingreso recurrente que dejas de cobrar</li>
+        </ul>
+        <figcaption>
+          <p id="chart-summary" class="chart-summary"></p>
+          <p id="chart-fees" class="help"></p>
+          <p class="help">El escenario sin mantención cobra solo el setup, sin herramientas, APIs ni excedentes mensuales. La diferencia es ingreso bruto, todavía sin descontar costos.</p>
+        </figcaption>
+      </figure>
+      <p class="note">El margen valoriza tus horas de implementación y los costos mensuales ingresados. No incluye impuestos, comisiones, horas futuras de soporte ni costos no declarados. No equivale a utilidad neta.</p>
+    </section>
+  </div>
 
-      const $ = id => document.getElementById(id);
-      const moneyFormat = new Intl.NumberFormat("es-CL", {
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2
-      });
-      const numberFormat = new Intl.NumberFormat("es-CL", {
-        maximumFractionDigits: 2
-      });
-      const integerFormat = new Intl.NumberFormat("es-CL", {
-        maximumFractionDigits: 0
-      });
-      const multiplierFormat = new Intl.NumberFormat("es-CL", {
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2
-      });
-      const scientificFormat = new Intl.NumberFormat("es-CL", {
-        notation: "scientific",
-        maximumFractionDigits: 1
-      });
+  <section class="panel section" aria-labelledby="goals-title">
+    <h2 id="goals-title">3. Tu meta de ingreso mensual</h2>
+    <div class="fields">
+      <div class="field">
+        <label for="goal">¿Cuánto quieres facturar al mes? (USD)</label>
+        <input id="goal" form="calculator" type="text" inputmode="decimal" value="10000" aria-describedby="goal-help" autocomplete="off">
+        <p id="goal-help" class="help">Meta de ingreso bruto, antes de costos e impuestos. No es tu sueldo ni tu utilidad.</p>
+      </div>
+      <div>
+        <p class="help">Usa tu precio base actual, sin descuentos ni excedentes. Cada setup es una venta nueva. La mensualidad se acumula mientras los clientes sigan activos.</p>
+      </div>
+    </div>
+    <div id="goals-results" class="results section" hidden>
+      <article class="card">
+        <span class="card-label">Solo implementación</span>
+        <output id="goal-setup" class="value"></output>
+        <p id="goal-setup-help" class="explanation"></p>
+      </article>
+      <article class="card primary">
+        <span class="card-label">Solo mensualidades recurrentes</span>
+        <output id="goal-recurring" class="value"></output>
+        <p id="goal-recurring-help" class="explanation"></p>
+      </article>
+      <article class="card">
+        <span class="card-label">Con un cliente nuevo cada mes</span>
+        <output id="goal-months" class="value"></output>
+        <p id="goal-months-help" class="explanation"></p>
+      </article>
+      <article class="card">
+        <span class="card-label">Meta recurrente sin depender del setup</span>
+        <output id="goal-stable" class="value"></output>
+        <p id="goal-stable-help" class="explanation"></p>
+      </article>
+    </div>
+    <p class="note">Partes con cero clientes. El primer cliente entra en el mes 1 y paga setup y primera mensualidad ese mes. Se suma uno por mes, sin bajas, atrasos ni cambios de precio. La proyección no evalúa tu capacidad de entrega.</p>
+  </section>
 
-      const cleanSigns = text => text.replace(/[\u2212\u2013\u2014]/g, "-");
-      const money = value => "USD " + cleanSigns(moneyFormat.format(value));
-      const percent = value => cleanSigns(numberFormat.format(value)) + "%";
-      const put = (id, text) => { $(id).textContent = text; };
+  <section class="panel section" aria-labelledby="break-title">
+    <h2 id="break-title">4. Punto de equilibrio</h2>
+    <div id="break-results" class="results" hidden>
+      <article class="card primary">
+        <span class="card-label">Recuperación de tus horas de implementación</span>
+        <output id="break-months" class="value big"></output>
+        <p id="break-explanation" class="explanation"></p>
+      </article>
+      <article class="card">
+        <span class="card-label">Aporte mensual después de herramientas</span>
+        <output id="break-contribution" class="value"></output>
+        <p id="break-detail" class="explanation"></p>
+      </article>
+    </div>
+    <p class="note">Supone setup cobrado al inicio y mensualidades al cierre de cada mes. Se descuenta el costo mensual de herramientas; no se cuentan excedentes ni descuentos. Recuperar la inversión inicial no garantiza rentabilidad futura.</p>
+  </section>
 
-      const definitions = [
-        ["tools", "Herramientas y APIs", false],
-        ["hours", "Horas de implementación", false],
-        ["hourly", "Valor hora", false],
-        ["salary", "Sueldo mensual", false],
-        ["volume", "Operaciones esperadas", true],
-        ["multiplier", "Multiplicador", false],
-        ["target", "Margen objetivo", false],
-        ["included", "Operaciones incluidas", true],
-        ["overage", "Tarifa del excedente", false]
-      ];
+  <section class="panel section" aria-labelledby="plans-title">
+    <h2 id="plans-title">5. Tres planes para tu propuesta</h2>
+    <p class="help">Entrada reduce el alcance y las horas a 60%. Recomendado usa tus datos actuales. Completo amplía horas y alcance a 160%. Herramientas y volumen incluido usan factores de 70%, 100% y 150%. Valida estos supuestos antes de enviar.</p>
+    <div id="plans" class="plans" hidden></div>
+    <p class="note">Precios sin descuentos. La mensualidad de cada plan incluye herramientas y honorarios calculados con el mismo porcentaje de mantención. Cada plan cobra sus propios excedentes. Los alcances son borradores editables mediante tus acuerdos con el cliente.</p>
+  </section>
 
-      let quote = "";
-      let revision = 0;
-      let copying = false;
-      let timer;
+  <section class="panel section" aria-labelledby="discount-title">
+    <h2 id="discount-title">6. Prueba un descuento antes de ofrecerlo</h2>
+    <p class="help">Simula el descuento sobre un cliente y lo aplica al setup, los honorarios, las herramientas facturadas y los excedentes de los primeros 12 meses. Tus costos y el alcance no cambian. No modifica la cotización, los planes ni la meta.</p>
+    <div class="discount-controls">
+      <label for="discount">Descuento a simular (%)</label>
+      <input id="discount" form="calculator" type="text" inputmode="decimal" value="0" aria-describedby="discount-help" autocomplete="off">
+      <label for="discount-range" class="help">Ajuste rápido del descuento</label>
+      <input id="discount-range" type="range" min="0" max="100" step="0.5" value="0">
+      <p id="discount-help" class="help">De 0% a 100%. También puedes escribir decimales.</p>
+    </div>
+    <div id="discount-results" hidden>
+      <div class="table-scroll">
+        <table>
+          <caption>Comparación del mismo proyecto con 12 mensualidades completas</caption>
+          <thead><tr><th scope="col">Indicador</th><th scope="col">Precio actual</th><th scope="col">Con descuento</th></tr></thead>
+          <tbody id="discount-table"></tbody>
+        </table>
+      </div>
+      <p id="discount-impact" class="note"></p>
+      <div id="discount-warning" class="alert warning" role="status" hidden></div>
+    </div>
+    <p class="note"><strong>Si el presupuesto no alcanza, baja el alcance y no el precio.</strong> Reduce flujos, integraciones, volumen o soporte y vuelve a estimar tus costos.</p>
+  </section>
 
-      function readValue(id) {
-        const raw = $(id).value.trim();
-        if (id === "salary" && raw === "") return 0;
-        if (!/^(?:\d+(?:[.,]\d+)?|[.,]\d+)$/.test(raw)) return NaN;
-        return Number(raw.replace(",", "."));
+  <section class="panel section" aria-labelledby="save-title">
+    <h2 id="save-title">7. Guarda y comparte tu cotización</h2>
+    <p class="help">Tus valores válidos quedan guardados en este navegador. El enlace lleva los campos de cálculo, tu meta y el descuento simulado, y quien lo reciba puede verlos y modificarlos.</p>
+    <div class="actions">
+      <button id="copy-quote" type="button" disabled>Copiar cotización</button>
+      <button id="share-quote" type="button" disabled>Generar enlace</button>
+      <button id="save-values" type="button" class="secondary" disabled>Guardar valores</button>
+      <button id="reset-values" type="button" class="secondary">Reiniciar</button>
+    </div>
+    <p id="storage-status" class="status" role="status"></p>
+    <p id="copy-status" class="status" role="status" aria-live="polite"></p>
+    <div id="copy-fallback" hidden>
+      <label for="quote-text">Cotización en texto plano</label>
+      <textarea id="quote-text" readonly spellcheck="false"></textarea>
+      <p class="help">Selecciona el texto y usa Copiar en tu dispositivo.</p>
+    </div>
+    <div id="share-fallback" hidden>
+      <label for="share-text">Enlace de la cotización</label>
+      <textarea id="share-text" readonly spellcheck="false" rows="3" style="min-height:100px"></textarea>
+      <p class="help">Puedes copiarlo manualmente. Si editas algún campo, genera un nuevo enlace.</p>
+    </div>
+    <p class="note">Copiar cotización incluye precios y los tres planes. No incluye tus costos internos, sueldo de referencia, meta ni descuento simulado. Reiniciar restaura los valores originales y elimina el guardado y los parámetros de esta calculadora de la dirección actual.</p>
+  </section>
+
+  <section class="panel section" aria-labelledby="references-title">
+    <h2 id="references-title">Referencias de mercado</h2>
+    <div class="reference-grid">
+      <div><span>Implementación</span><strong>USD 1.000</strong><span>Mediana de referencia. Rango: USD 500 a USD 2.400.</span></div>
+      <div><span>Mantención mensual</span><strong>USD 75 a USD 150</strong><span>Referencia para servicios de mantención.</span></div>
+      <div><span>Si reemplaza un rol</span><strong>USD 150 a USD 480</strong><span>Referencia mensual para ese escenario.</span></div>
+      <div><span>Ejemplo de consumo</span><strong>5.000 operaciones</strong><span>Incluidas al mes, más USD 1 por cada 100 adicionales.</span></div>
+    </div>
+    <p class="note">Valores orientativos proporcionados para esta calculadora, sin fuente ni fecha de relevamiento. No son mínimos, máximos ni tarifas garantizadas. No ajustan automáticamente tu cotización.</p>
+  </section>
+
+  <details class="panel">
+    <summary>Cómo se calculan los resultados</summary>
+    <ul>
+      <li>Costo de implementación = horas × valor hora. Setup = costo de implementación × multiplicador.</li>
+      <li>Honorarios de mantención = setup × porcentaje seleccionado. Mensualidad base = honorarios + herramientas y APIs × multiplicador.</li>
+      <li>Excedente = bloques de 100 operaciones sobre el umbral, redondeados hacia arriba, × tarifa por bloque. Bajo el umbral no se cobra excedente.</li>
+      <li>Ingreso anual por cliente = setup + 12 × (mensualidad base + excedente esperado). Costos anuales = costo de implementación + 12 × herramientas y APIs.</li>
+      <li>Resultado anual = ingreso anual - costos anuales. Margen anual = resultado anual ÷ ingreso anual × 100. Sin ingresos el margen no es calculable.</li>
+      <li>Multiplicador para el margen objetivo = 1 ÷ (1 - objetivo / 100). Un multiplicador de 1,30 da 30% de markup y 23,08% de margen. Para 30% de margen necesitas aproximadamente 1,43.</li>
+      <li>Las barras usan la misma escala. Los valores negativos se extienden hacia la izquierda desde cero. El gráfico compara setup + mes × cobro mensual estimado con cobrar solo el setup.</li>
+      <li>Clientes para la meta: meta ÷ setup o meta ÷ mensualidad base, redondeando hacia arriba. Los clientes de implementación deben ser nuevos cada mes. Los recurrentes deben permanecer activos.</li>
+      <li>Con un cliente nuevo al mes, el ingreso del mes n = un setup + n mensualidades base. El mes de llegada es el menor entero n de al menos 1 que alcanza la meta. No se acumulan ingresos de meses anteriores para cumplir una meta mensual.</li>
+      <li>Punto de equilibrio: si el setup cubre las horas valorizadas, la recuperación ocurre en el mes 0. En caso contrario, meses = (costo de implementación - setup) ÷ (mensualidad base - herramientas), redondeando hacia arriba. Si ese aporte mensual no es positivo, no se recupera bajo estos supuestos.</li>
+      <li>Los planes escalan horas, costo de herramientas y operaciones incluidas. El volumen esperado del cliente se mantiene para calcular el excedente de cada opción. No se asume que los costos reales siempre escalen de manera proporcional.</li>
+      <li>Descuento: ingresos simulados = ingresos actuales × (1 - descuento / 100). Los costos no cambian. Se alerta si la disminución del resultado anual supera la mitad del resultado original positivo, o si hay pérdidas.</li>
+      <li>El sueldo es un ancla comparativa. No aumenta automáticamente el precio ni representa ahorro garantizado.</li>
+      <li>Se conserva precisión interna y se muestran montos con dos decimales. Ingresa coma o punto decimal sin separadores de miles. Los enlaces tienen prioridad sobre el guardado local; un enlace se completa con valores originales, no con datos guardados de otro proyecto.</li>
+    </ul>
+  </details>
+  <footer>Los cálculos se ejecutan en tu navegador y se guardan localmente cuando es posible. No se envían a una API. Al compartir un enlace, los parámetros forman parte de la dirección y pueden quedar en el historial y los registros del alojamiento. El botón de copiar usa el portapapeles de tu dispositivo.</footer>
+  <noscript><p class="alert danger">Activa JavaScript en tu navegador para calcular los precios.</p></noscript>
+</main>
+
+<script>
+(() => {
+  "use strict";
+
+  const $ = id => document.getElementById(id);
+  const KEY = "calculadora-precios-ia:v2";
+  const VERSION = "3";
+  const nf = new Intl.NumberFormat("es-CL", { maximumFractionDigits:2 });
+  const mf = new Intl.NumberFormat("es-CL", { minimumFractionDigits:2, maximumFractionDigits:2 });
+  const inf = new Intl.NumberFormat("es-CL", { maximumFractionDigits:0 });
+  const sf = new Intl.NumberFormat("es-CL", { notation:"scientific", maximumFractionDigits:1 });
+  const clean = text => String(text).replace(/[\u2212\u2013\u2014]/g, "-");
+  const num = n => clean(nf.format(n));
+  const integer = n => clean(inf.format(n));
+  const money = n => "USD " + clean(mf.format(n));
+  const pct = n => Number.isFinite(n) ? num(n) + "%" : "No calculable";
+  const put = (id, text) => { $(id).textContent = text; };
+  const margin = (revenue, cost) => revenue > 0 ? (revenue - cost) / revenue * 100 : NaN;
+
+  const defaults = {
+    service:"custom", tools:"80", unitcost:"0", hours:"20", hourly:"30", salary:"",
+    volume:"5000", multiplier:"1.30", target:"30", maintenance:"15",
+    included:"5000", overage:"1", goal:"10000", discount:"0"
+  };
+  const keys = Object.keys(defaults);
+  const definitions = [
+    ["tools","Plataforma fija al mes",false],
+    ["unitcost","Costo por operación",false],
+    ["hours","Horas de implementación",false],
+    ["hourly","Valor hora",false],
+    ["salary","Sueldo mensual",false],
+    ["volume","Operaciones esperadas",true],
+    ["multiplier","Multiplicador",false],
+    ["target","Margen objetivo",false],
+    ["included","Operaciones incluidas",true],
+    ["overage","Tarifa del excedente",false],
+    ["goal","Meta mensual",false],
+    ["discount","Descuento",false]
+  ];
+  const presets = {
+    whatsapp: {
+      values:{hours:"24",tools:"30",unitcost:"0.02",volume:"6000",included:"5000",maintenance:"15",overage:"2"},
+      scopes:[
+        ["Un canal de WhatsApp y un flujo de preguntas frecuentes","Derivación a una persona y una ronda de ajustes"],
+        ["Un canal con calificación de contactos y hasta tres flujos","Una integración y dos rondas de ajustes"],
+        ["Hasta cinco flujos y dos integraciones","Seguimiento comercial y tres rondas de ajustes"]
+      ]
+    },
+    automation: {
+      values:{hours:"30",tools:"11",unitcost:"0",volume:"10000",included:"8000",maintenance:"15",overage:"1"},
+      scopes:[
+        ["Un flujo entre dos aplicaciones","Manejo básico de errores y una ronda de ajustes"],
+        ["Hasta tres flujos entre tres aplicaciones","Alertas de fallas, documentación y dos rondas de ajustes"],
+        ["Hasta cinco flujos entre cuatro aplicaciones","Reintentos, monitoreo y tres rondas de ajustes"]
+      ]
+    },
+    agent: {
+      values:{hours:"60",tools:"20",unitcost:"0.05",volume:"3000",included:"2500",maintenance:"20",overage:"4"},
+      scopes:[
+        ["Un agente para una tarea y una fuente de información","Pruebas básicas y una ronda de ajustes"],
+        ["Un agente con hasta tres herramientas y dos fuentes","Pruebas de calidad, derivación humana y dos rondas de ajustes"],
+        ["Hasta dos agentes, cinco herramientas y cuatro fuentes","Evaluaciones ampliadas y tres rondas de ajustes"]
+      ]
+    },
+    web: {
+      values:{hours:"18",tools:"15",unitcost:"0",volume:"0",included:"0",maintenance:"10",overage:"0"},
+      scopes:[
+        ["Una landing de hasta cuatro secciones","Formulario de contacto y una ronda de ajustes"],
+        ["Hasta tres páginas adaptables a celular","Formulario integrado, analítica y dos rondas de ajustes"],
+        ["Hasta seis páginas y dos integraciones","Eventos de conversión y tres rondas de ajustes"]
+      ]
+    },
+    crm: {
+      values:{hours:"36",tools:"75",unitcost:"0",volume:"8000",included:"6000",maintenance:"15",overage:"1.5"},
+      scopes:[
+        ["Una integración con sincronización en un sentido","Mapeo de campos y una ronda de ajustes"],
+        ["Hasta dos integraciones y reglas de asignación comercial","Control de duplicados y dos rondas de ajustes"],
+        ["Hasta cuatro integraciones y sincronización en ambos sentidos","Alertas comerciales, trazabilidad y tres rondas de ajustes"]
+      ]
+    },
+    audit: {
+      values:{hours:"8",tools:"0",unitcost:"0",volume:"0",included:"0",maintenance:"0",overage:"0"},
+      scopes:[
+        ["Una entrevista y revisión de un proceso","Resumen de oportunidades priorizadas"],
+        ["Hasta tres entrevistas y revisión de tres procesos","Informe con prioridades, estimación de impacto y reunión de cierre"],
+        ["Hasta cinco entrevistas y revisión de cinco procesos","Hoja de ruta de 90 días y taller de priorización"]
+      ]
+    },
+    custom: {
+      scopes:[
+        ["Un caso de uso principal y una ronda de ajustes","Entrega documentada y validación básica"],
+        ["Hasta tres flujos y una integración","Documentación, capacitación y dos rondas de ajustes"],
+        ["Hasta cinco flujos y dos integraciones","Pruebas ampliadas, capacitación y tres rondas de ajustes"]
+      ]
+    }
+  };
+
+  let quote = "";
+  let validState = false;
+  let revision = 0;
+  let copying = false;
+  let lastSaved = "";
+  let bootMessage = "";
+
+  function read(id) {
+    const raw = $(id).value.trim();
+    if (id === "salary" && raw === "") return 0;
+    if (!/^(?:\d+(?:[.,]\d+)?|[.,]\d+)$/.test(raw)) return NaN;
+    return Number(raw.replace(",", "."));
+  }
+
+  function snapshot() {
+    return Object.fromEntries(keys.map(key => [key, $(key).value]));
+  }
+
+  function apply(data) {
+    for (const key of keys) {
+      const value = data[key];
+      if (typeof value !== "string" || value.length > 80) continue;
+      const element = $(key);
+      if (element.tagName === "SELECT" &&
+          !Array.from(element.options).some(option => option.value === value)) continue;
+      element.value = value;
+    }
+  }
+
+  function persist(explicit = false) {
+    if (!validState) return;
+    const serialized = JSON.stringify({version:VERSION,values:snapshot()});
+    if (!explicit && serialized === lastSaved) return;
+    try {
+      localStorage.setItem(KEY, serialized);
+      lastSaved = serialized;
+      put("storage-status", explicit ? "Valores guardados en este navegador." : "Guardado automático actualizado.");
+    } catch {
+      put("storage-status", "El navegador no permite guardar localmente. Puedes conservar tus valores con un enlace.");
+    }
+  }
+
+  function load() {
+    apply(defaults);
+    const params = new URL(location.href).searchParams;
+    const hasQuote = params.has("calc") || keys.some(key => params.has(key));
+    if (hasQuote) {
+      const data = {};
+      for (const key of keys) if (params.has(key)) data[key] = params.get(key);
+      apply(data);
+      bootMessage = "Cotización cargada desde el enlace. Sus valores tienen prioridad sobre el guardado local.";
+      return;
+    }
+    try {
+      const stored = JSON.parse(localStorage.getItem(KEY) || "null");
+      if (stored && stored.version === VERSION && stored.values && typeof stored.values === "object") {
+        apply(stored.values);
+        bootMessage = "Se restauraron los valores guardados en este navegador.";
       }
+    } catch {
+      bootMessage = "No se pudo leer el guardado local. Se usaron los valores originales.";
+    }
+  }
 
-      function renderBars(markup, realMargin) {
-        const valid = Number.isFinite(markup) && Number.isFinite(realMargin);
-        $("margin-bars").hidden = !valid;
-        if (!valid) return;
+  function renderBars(markup, realMargin) {
+    const valid = Number.isFinite(markup) && Number.isFinite(realMargin);
+    $("margin-bars").hidden = !valid;
+    if (!valid) return;
+    const negative = markup < 0 || realMargin < 0;
+    const extent = Math.max(100, Math.abs(markup), Math.abs(realMargin));
+    const zero = negative ? 50 : 0;
+    const available = negative ? 50 : 100;
+    for (const [id,value] of [["markup-fill",markup],["margin-fill",realMargin]]) {
+      const width = Math.abs(value) / extent * available;
+      $(id).style.left = (value < 0 ? zero - width : zero) + "%";
+      $(id).style.width = width + "%";
+      $(id).classList.toggle("negative", value < 0);
+    }
+    $("margin-bars").querySelectorAll(".bar-zero").forEach(line => {
+      line.style.left = zero + "%";
+    });
+    put("markup-bar-value",pct(markup));
+    put("margin-bar-value",pct(realMargin));
+    put("bar-scale", negative
+      ? "Escala común: " + pct(-extent) + " a " + pct(extent) + ". Cero al centro."
+      : "Escala común: 0% a " + pct(extent) + ".");
+    $("margin-bars").setAttribute("aria-label",
+      "Markup: " + pct(markup) + ". Margen real: " + pct(realMargin) + ". Ambas barras usan la misma escala.");
+  }
 
-        const negative = markup < 0 || realMargin < 0;
-        const extent = Math.max(100, Math.abs(markup), Math.abs(realMargin));
-        const zero = negative ? 50 : 0;
-        const available = negative ? 50 : 100;
+  function svgElement(name, attrs = {}, text) {
+    const el = document.createElementNS("http://www.w3.org/2000/svg",name);
+    for (const [key,value] of Object.entries(attrs)) el.setAttribute(key,String(value));
+    if (text !== undefined) el.textContent = text;
+    return el;
+  }
 
-        for (const [id, value] of [["markup-fill", markup], ["margin-fill", realMargin]]) {
-          const width = Math.abs(value) / extent * available;
-          $(id).style.left = (value < 0 ? zero - width : zero) + "%";
-          $(id).style.width = width + "%";
-          $(id).classList.toggle("negative", value < 0);
-        }
-        for (const line of $("margin-bars").querySelectorAll(".bar-zero")) {
-          line.style.left = zero + "%";
-        }
+  function axisLabel(value) {
+    if (value === 0) return "0";
+    if (Math.abs(value) >= 1e9 || Math.abs(value) < .01) return clean(sf.format(value));
+    if (value >= 1e6) return num(value / 1e6) + " mill.";
+    if (value >= 1e3) return num(value / 1e3) + " mil";
+    return num(value);
+  }
 
-        put("markup-bar-value", percent(markup));
-        put("margin-bar-value", percent(realMargin));
-        put("bar-scale", negative
-          ? "Escala común: " + percent(-extent) + " a " + percent(extent) + ". Cero al centro."
-          : "Escala común: 0% a " + percent(extent) + ".");
+  function renderChart(setup,monthlyTotal,fee) {
+    const revenue = setup + 12 * monthlyTotal;
+    const left = 90, right = 535, top = 38, bottom = 255;
+    const maximum = Math.max(1,revenue * 1.12);
+    const rawStep = maximum / 4;
+    const magnitude = Math.pow(10,Math.floor(Math.log10(rawStep)));
+    const fraction = rawStep / magnitude;
+    const step = ([1,2,2.5,5,10].find(n => n >= fraction) || 10) * magnitude;
+    const ceiling = Math.ceil(maximum / step) * step;
+    const ticks = Math.round(ceiling / step);
+    const x = month => left + month / 12 * (right - left);
+    const y = value => bottom - value / ceiling * (bottom - top);
+    const fragment = document.createDocumentFragment();
+    const add = (name,attrs,text) => {
+      const el = svgElement(name,attrs,text);
+      fragment.appendChild(el);
+      return el;
+    };
+    add("title",{id:"income-svg-title"},"Ingreso acumulado de los meses 0 a 12");
+    add("desc",{id:"income-svg-desc"},
+      "Ambas series parten con " + money(setup) + ". Con cobros mensuales llegas a " +
+      money(revenue) + " al mes 12, y cobrando solo el setup te quedas en " + money(setup) +
+      ". La diferencia es " + money(12 * monthlyTotal) + ".");
+    add("text",{x:left,y:20},"Ingreso acumulado (USD)");
+    for (let i = 0; i <= ticks; i++) {
+      const value = i * step;
+      add("line",{x1:left,y1:y(value),x2:right,y2:y(value),stroke:"#2a3547"});
+      add("text",{x:left - 10,y:y(value) + 4,"text-anchor":"end"},axisLabel(value));
+    }
+    add("line",{x1:left,y1:top,x2:left,y2:bottom,stroke:"#a9b5c8"});
+    add("line",{x1:left,y1:bottom,x2:right,y2:bottom,stroke:"#a9b5c8"});
+    for (let month = 0; month <= 12; month++) {
+      add("line",{x1:x(month),y1:bottom,x2:x(month),y2:bottom + 5,stroke:"#a9b5c8"});
+      add("text",{x:x(month),y:bottom + 21,"text-anchor":"middle"},String(month));
+    }
+    add("text",{x:(left + right) / 2,y:301,"text-anchor":"middle"},"Mes");
+    const points = Array.from({length:13},(_,month) => ({month,value:setup + month * monthlyTotal}));
+    const path = points.map((p,i) => (i ? "L" : "M") + x(p.month) + " " + y(p.value)).join(" ");
+    add("path",{d:path + " L" + x(12) + " " + y(setup) + " L" + x(0) + " " + y(setup) + " Z",fill:"#80e2c2","fill-opacity":.18});
+    add("path",{d:path,fill:"none",stroke:"#80e2c2","stroke-width":3,"stroke-linejoin":"round"});
+    add("line",{x1:x(0),y1:y(setup),x2:x(12),y2:y(setup),stroke:"#9dbbff","stroke-width":3,"stroke-dasharray":"7 5"});
+    for (const p of points) {
+      const dot = add("circle",{cx:x(p.month),cy:y(p.value),r:3.5,fill:"#80e2c2",stroke:"#0d1420","stroke-width":1.5});
+      dot.appendChild(svgElement("title",{},"Mes " + p.month + ": " + money(p.value) + " con cobros mensuales; " + money(setup) + " solo setup."));
+    }
+    add("circle",{cx:x(12),cy:y(setup),r:4,fill:"#9dbbff"});
+    $("income-chart").replaceChildren(fragment);
+    put("chart-summary","Al mes 12 dejas de cobrar " + money(12 * monthlyTotal) +
+      " si cobras solo el setup. Con cobros mensuales llegas a " + money(revenue) + " y con solo setup te quedas en " + money(setup) + ".");
+    put("chart-fees","De esa diferencia, " + money(12 * fee) + " corresponden a honorarios de mantención.");
+  }
 
-        $("margin-bars").setAttribute("aria-label",
-          "Markup que puedes confundir con margen: " + percent(markup) +
-          ". Margen real: " + percent(realMargin) +
-          ". Ambas barras usan la misma escala.");
-      }
+  function calculate(v,hoursFactor = 1,usageFactor = 1) {
+    const hours = v.hours * hoursFactor;
+    const tools = v.tools * usageFactor + v.volume * v.unitcost;
+    const included = Math.floor(v.included * usageFactor);
+    const cost = hours * v.hourly;
+    const setup = cost * v.multiplier;
+    const fee = setup * v.maintenance / 100;
+    const toolsPrice = tools * v.multiplier;
+    const monthly = fee + toolsPrice;
+    const extra = Math.max(0,v.volume - included);
+    const blocks = Math.ceil(extra / 100);
+    const extraCharge = blocks * v.overage;
+    const total = monthly + extraCharge;
+    const annual = setup + 12 * total;
+    const costs = cost + 12 * tools;
+    return {hours,tools,included,cost,setup,fee,toolsPrice,monthly,extra,blocks,extraCharge,total,annual,costs,profit:annual - costs};
+  }
 
-      function svgElement(name, attributes = {}, text) {
-        const element = document.createElementNS("http://www.w3.org/2000/svg", name);
-        for (const [key, value] of Object.entries(attributes)) {
-          element.setAttribute(key, String(value));
-        }
-        if (text !== undefined) element.textContent = text;
-        return element;
-      }
+  // Evita que errores mínimos de punto flotante agreguen un cliente o mes.
+  function ceilRatio(amount,unit) {
+    if (amount <= 0) return 0;
+    if (unit <= 0) return Infinity;
+    const ratio = amount / unit;
+    if (!Number.isFinite(ratio)) return Infinity;
+    const nearest = Math.round(ratio);
+    return Math.max(1,Math.abs(ratio - nearest) <= 8 * Number.EPSILON * Math.max(1,ratio)
+      ? nearest : Math.ceil(ratio));
+  }
 
-      function axisLabel(value) {
-        if (value === 0) return "0";
-        if (Math.abs(value) >= 1e9 || Math.abs(value) < .01) {
-          return cleanSigns(scientificFormat.format(value));
-        }
-        if (Math.abs(value) >= 1e6) return numberFormat.format(value / 1e6) + " mill.";
-        if (Math.abs(value) >= 1e3) return numberFormat.format(value / 1e3) + " mil";
-        return numberFormat.format(value);
-      }
+  function countText(count,singular,plural) {
+    if (!Number.isFinite(count)) return "No alcanzable";
+    if (!Number.isSafeInteger(count)) return "Fuera de rango";
+    return integer(count) + " " + (count === 1 ? singular : plural);
+  }
 
-      function renderChart(setup, monthlyTotal, maintenanceFee) {
-        const svg = $("income-chart");
-        const annualRevenue = setup + 12 * monthlyTotal;
-        const difference = 12 * monthlyTotal;
-        const width = 560;
-        const left = 90;
-        const right = 25;
-        const top = 38;
-        const bottom = 255;
-        const plotWidth = width - left - right;
-        const plotHeight = bottom - top;
+  function renderGoals(v,c) {
+    const setupClients = ceilRatio(v.goal,c.setup);
+    const recurringClients = ceilRatio(v.goal,c.monthly);
+    let combinedMonth = v.goal === 0 ? 0 :
+      c.monthly > 0 ? Math.max(1,ceilRatio(Math.max(0,v.goal - c.setup),c.monthly)) :
+      c.setup >= v.goal ? 1 : Infinity;
 
-        // Al menos USD 1 de escala para el escenario sin ingresos.
-        const maximum = Math.max(1, annualRevenue * 1.12);
-        const rawStep = maximum / 4;
-        const magnitude = Math.pow(10, Math.floor(Math.log10(rawStep)));
-        const fraction = rawStep / magnitude;
-        const niceFraction = [1, 2, 2.5, 5, 10].find(value => value >= fraction) || 10;
-        const step = niceFraction * magnitude;
-        const ceiling = Math.ceil(maximum / step) * step;
-        const ticks = Math.round(ceiling / step);
-        const x = month => left + month / 12 * plotWidth;
-        const y = value => bottom - value / ceiling * plotHeight;
-        const fragment = document.createDocumentFragment();
-        const add = (name, attrs, text) => {
-          const element = svgElement(name, attrs, text);
-          fragment.appendChild(element);
-          return element;
-        };
+    put("goal-setup",countText(setupClients,"cliente nuevo / mes","clientes nuevos / mes"));
+    put("goal-setup-help", v.goal === 0 ? "La meta es cero; no necesitas nuevas ventas para alcanzarla." :
+      c.setup > 0 ? "Cada venta aporta " + money(c.setup) + " una sola vez. Este número de ventas debe repetirse cada mes." :
+      "El setup es cero. Las implementaciones no generan ingresos para esta meta.");
+    put("goal-recurring",countText(recurringClients,"cliente activo","clientes activos"));
+    put("goal-recurring-help",c.monthly > 0
+      ? "Cada cliente aporta " + money(c.monthly) + " al mes: " + money(c.fee) + " de honorarios y " + money(c.toolsPrice) + " de herramientas facturadas."
+      : "No hay mensualidad base. Define un cobro recurrente para construir esta fuente de ingreso.");
+    put("goal-months",countText(combinedMonth,"mes","meses"));
+    let combinedText;
+    if (v.goal === 0) combinedText = "La meta ya está cumplida porque es cero.";
+    else if (!Number.isFinite(combinedMonth)) combinedText = "Con una venta nueva mensual y sin mensualidad, facturas " + money(c.setup) + " cada mes. Acumular meses no aumenta ese ingreso mensual.";
+    else if (!Number.isSafeInteger(combinedMonth)) combinedText = "La cantidad de meses supera el rango de enteros que se puede representar con precisión.";
+    else combinedText = "En el mes " + integer(combinedMonth) + ": " + money(c.setup) +
+      " de una implementación nueva + " + money(combinedMonth * c.monthly) +
+      " de " + integer(combinedMonth) + " mensualidades = " + money(c.setup + combinedMonth * c.monthly) + ".";
+    put("goal-months-help",combinedText);
+    put("goal-stable",countText(recurringClients,"mes","meses"));
+    put("goal-stable-help",v.goal === 0 ? "La meta ya está cumplida." :
+      Number.isSafeInteger(recurringClients)
+        ? "Con un cliente nuevo al mes, en el mes " + integer(recurringClients) +
+          " facturas " + money(recurringClients * c.monthly) + " solo en mensualidades, aunque no vendas otro setup."
+        : c.monthly === 0 ? "Sin mensualidad no alcanzas una meta recurrente positiva." :
+          "El plazo supera el rango de cálculo preciso. Revisa tu precio y tu meta.");
+  }
 
-        add("title", { id: "income-svg-title" }, "Ingreso acumulado de los meses 0 a 12");
-        add("desc", { id: "income-svg-desc" },
-          "Ambas series parten con " + money(setup) + " de implementación. " +
-          "Con mantención y cobros mensuales, el ingreso al mes 12 es " + money(annualRevenue) +
-          ". Sin mantención, cobrando solo el setup, permanece en " + money(setup) +
-          ". Diferencia acumulada: " + money(difference) + ".");
+  function renderBreak(c) {
+    const remaining = Math.max(0,c.cost - c.setup);
+    const contribution = c.monthly - c.tools;
+    const months = ceilRatio(remaining,contribution);
+    put("break-months",countText(months,"mes","meses"));
+    put("break-contribution",money(contribution));
+    put("break-detail",money(c.monthly) + " de mensualidad base - " + money(c.tools) +
+      " de herramientas. No descuenta horas futuras de soporte.");
+    put("break-explanation",remaining === 0
+      ? c.cost === 0
+        ? "No hay horas valorizadas que recuperar. Revisa que tus horas y tu valor hora estén completos."
+        : "Recuperas " + money(c.cost) + " de horas valorizadas al cobrar el setup de " + money(c.setup) + " en el mes 0."
+      : contribution <= 0
+        ? "Quedan " + money(remaining) + " por recuperar y la mensualidad no deja un aporte positivo después de herramientas."
+        : Number.isSafeInteger(months)
+          ? "Tras cobrar el setup faltan " + money(remaining) + ". Recuperas ese saldo al cierre del mes " + integer(months) + " con el aporte mensual."
+          : "El plazo supera el rango de cálculo preciso. Revisa los valores del proyecto.");
+  }
 
-        add("text", { x: left, y: 20 }, "Ingreso acumulado (USD)");
+  function element(tag,className,text) {
+    const el = document.createElement(tag);
+    if (className) el.className = className;
+    if (text !== undefined) el.textContent = text;
+    return el;
+  }
 
-        for (let tick = 0; tick <= ticks; tick++) {
-          const value = tick * step;
-          const position = y(value);
-          add("line", {
-            x1: left, y1: position, x2: width - right, y2: position,
-            stroke: "#2a3547", "stroke-width": 1
-          });
-          add("text", {
-            x: left - 10, y: position + 4, "text-anchor": "end"
-          }, axisLabel(value));
-        }
+  function renderPlans(v) {
+    const specs = [
+      {name:"Entrada",h:.6,u:.7},
+      {name:"Recomendado",h:1,u:1},
+      {name:"Completo",h:1.6,u:1.5}
+    ];
+    const service = presets[$("service").value] || presets.custom;
+    const list = specs.map((spec,index) => ({
+      ...spec,
+      ...calculate(v,spec.h,spec.u),
+      scope:[...service.scopes[index]]
+    }));
+    const fragment = document.createDocumentFragment();
+    for (const [index,plan] of list.entries()) {
+      const card = element("article","card plan" + (index === 1 ? " primary" : ""));
+      card.append(element("span","badge",index === 1 ? "Opción recomendada" : index === 0 ? "Alcance acotado" : "Alcance ampliado"));
+      card.append(element("h3","",plan.name));
+      card.append(element("span","card-label","Implementación, pago único"));
+      card.append(element("strong","value",money(plan.setup)));
+      card.append(element("span","card-label","Mensualidad base"));
+      card.append(element("strong","value",money(plan.monthly)));
+      const scopeList = element("ul");
+      for (const text of plan.scope) scopeList.append(element("li","",text));
+      scopeList.append(element("li","",integer(plan.included) + " operaciones incluidas al mes."));
+      scopeList.append(element("li","",plan.fee > 0
+        ? "Mantención de lo entregado; mejoras nuevas se cotizan aparte. Acuerda horas y tiempos de respuesta."
+        : "Sin honorarios de mantención. Soporte y cambios posteriores se cotizan aparte."));
+      card.append(scopeList);
+      card.append(element("p","help",num(plan.hours) + " horas estimadas. Cobras " +
+        money(plan.fee) + " de honorarios al mes y " + money(plan.toolsPrice) + " de herramientas facturadas."));
+      card.append(element("p","help","Cobras " + money(v.overage) + " por cada bloque de 100 operaciones iniciado. Al volumen esperado son " +
+        money(plan.extraCharge) + " extra al mes, con un total mensual de " + money(plan.total) + "."));
+      fragment.appendChild(card);
+    }
+    $("plans").replaceChildren(fragment);
+    return list;
+  }
 
-        add("line", { x1: left, y1: top, x2: left, y2: bottom, stroke: "#a9b5c8" });
-        add("line", { x1: left, y1: bottom, x2: width - right, y2: bottom, stroke: "#a9b5c8" });
-
-        for (let month = 0; month <= 12; month++) {
-          add("line", {
-            x1: x(month), y1: bottom, x2: x(month), y2: bottom + 5, stroke: "#a9b5c8"
-          });
-          add("text", { x: x(month), y: bottom + 21, "text-anchor": "middle" }, String(month));
-        }
-        add("text", { x: left + plotWidth / 2, y: 301, "text-anchor": "middle" }, "Mes");
-
-        const points = Array.from({ length: 13 }, (_, month) => ({
-          month,
-          value: setup + month * monthlyTotal
-        }));
-        const linePath = points.map((point, index) =>
-          (index === 0 ? "M" : "L") + x(point.month) + " " + y(point.value)
-        ).join(" ");
-
-        add("path", {
-          d: linePath + " L" + x(12) + " " + y(setup) + " L" + x(0) + " " + y(setup) + " Z",
-          fill: "#80e2c2", "fill-opacity": .18
-        });
-        add("path", {
-          d: linePath, fill: "none", stroke: "#80e2c2",
-          "stroke-width": 3, "stroke-linejoin": "round"
-        });
-        add("line", {
-          x1: x(0), y1: y(setup), x2: x(12), y2: y(setup),
-          stroke: "#9dbbff", "stroke-width": 3, "stroke-dasharray": "7 5"
-        });
-
-        for (const point of points) {
-          const dot = add("circle", {
-            cx: x(point.month), cy: y(point.value), r: 3.5,
-            fill: "#80e2c2", stroke: "#0d1420", "stroke-width": 1.5
-          });
-          dot.appendChild(svgElement("title", {},
-            "Mes " + point.month + ": " + money(point.value) +
-            " con cobros mensuales; " + money(setup) + " solo setup."));
-        }
-        add("circle", { cx: x(12), cy: y(setup), r: 4, fill: "#9dbbff" });
-        svg.replaceChildren(fragment);
-
-        const summary = $("chart-summary");
-        const strong = document.createElement("strong");
-        strong.textContent = money(difference);
-        summary.replaceChildren(
-          "Al mes 12 dejas de cobrar ",
-          strong,
-          " si cobras solo el setup. Con cobros mensuales: " + money(annualRevenue) +
-          ". Solo setup: " + money(setup) + "."
-        );
-        put("chart-fees",
-          "De esa diferencia, " + money(12 * maintenanceFee) +
-          " corresponden a honorarios de mantención.");
-      }
-
-      function resetCopy() {
-        revision++;
-        quote = "";
-        $("copy-quote").disabled = true;
-        put("copy-quote", "Copiar cotización");
-        put("copy-status", "");
-        $("copy-fallback").hidden = true;
-        $("quote-text").value = "";
-      }
-
-      function update() {
-        resetCopy();
-        const values = {};
-        const errors = [];
-
-        for (const [id, label, whole] of definitions) {
-          const value = readValue(id);
-          values[id] = value;
-          let error = "";
-
-          if (!Number.isFinite(value) || value < 0) {
-            error = label + ": ingresa un número válido de cero o más, sin separadores de miles.";
-          } else if (whole && !Number.isSafeInteger(value)) {
-            error = label + ": ingresa un número entero válido.";
-          } else if (value > 1e12) {
-            error = label + ": ingresa un valor de hasta 1.000.000.000.000.";
-          } else if (id === "multiplier" && value <= 0) {
-            error = "Multiplicador: debe ser mayor que cero.";
-          } else if (id === "multiplier" && !Number.isFinite((1 - 1 / value) * 100)) {
-            error = "Multiplicador: el valor es demasiado pequeño para calcular el margen.";
-          } else if (id === "target" && value >= 100) {
-            error = "Margen objetivo: debe ser de cero a menos de 100%.";
-          }
-
-          $(id).setAttribute("aria-invalid", String(Boolean(error)));
-          if (error) errors.push(error);
-        }
-
-        const replacesRole = Number.isFinite(values.salary) && values.salary > 0;
-        for (const option of $("maintenance").querySelectorAll("[data-role]")) {
-          option.disabled = !replacesRole;
-          option.hidden = !replacesRole;
-        }
-        if (!replacesRole && Number($("maintenance").value) > 20) {
-          $("maintenance").value = "15";
-        }
-
-        const validMultiplier = Number.isFinite(values.multiplier) &&
-          values.multiplier > 0 && values.multiplier <= 1e12 &&
-          Number.isFinite((1 - 1 / values.multiplier) * 100);
-
-        if (validMultiplier) {
-          const markup = (values.multiplier - 1) * 100;
-          const realMargin = (1 - 1 / values.multiplier) * 100;
-
-          put("markup-result", percent(markup));
-          put("multiplier-margin", percent(realMargin));
-          renderBars(markup, realMargin);
-          put(
-            "margin-example",
-            "Con un costo de " + money(100) + " y un multiplicador de " +
-            numberFormat.format(values.multiplier) + ", cobras " +
-            money(100 * values.multiplier) + ". La diferencia es " +
-            money(100 * (values.multiplier - 1)) + ": equivale a " +
-            percent(realMargin) + " del precio."
-          );
-        } else {
-          put("markup-result", "Sin calcular");
-          put("multiplier-margin", "Sin calcular");
-          put("margin-example", "Ingresa un multiplicador válido para comparar markup y margen.");
-          renderBars(NaN, NaN);
-        }
-
-        if (Number.isFinite(values.target) && values.target >= 0 && values.target < 100) {
-          const correctMultiplier = 1 / (1 - values.target / 100);
-          put(
-            "target-result",
-            "Para lograr " + percent(values.target) +
-            " de margen sobre un costo, el multiplicador correcto es aproximadamente " +
-            multiplierFormat.format(correctMultiplier) +
-            ". Fórmula: 1 ÷ (1 - " + numberFormat.format(values.target) +
-            " / 100). Reemplaza tu multiplicador si quieres usar este objetivo."
-          );
-        } else {
-          put("target-result", "Ingresa un margen objetivo válido menor que 100%.");
-        }
-
-        $("validation").hidden = errors.length === 0;
-        put("validation-text", errors.join(" "));
-        $("results-region").hidden = errors.length > 0;
-        $("chart-section").hidden = errors.length > 0;
-        if (errors.length) {
-          put("copy-status", "Corrige los datos para copiar la cotización.");
-          return;
-        }
-
-        const { tools, hours, hourly, salary, volume, multiplier, included, overage } = values;
-        const rate = Number($("maintenance").value) / 100;
-        const implementationCost = hours * hourly;
-        const setup = implementationCost * multiplier;
-        const maintenanceFee = setup * rate;
-        const toolsPrice = tools * multiplier;
-        const monthly = maintenanceFee + toolsPrice;
-        const extraOperations = Math.max(0, volume - included);
-        const blocks = Math.ceil(extraOperations / 100);
-        const extraCharge = blocks * overage;
-        const monthlyTotal = monthly + extraCharge;
-        const annualRevenue = setup + 12 * monthlyTotal;
-        const annualCosts = implementationCost + 12 * tools;
-        const annualProfit = annualRevenue - annualCosts;
-        const annualMargin = annualRevenue > 0 ? annualProfit / annualRevenue * 100 : null;
-        const setupMargin = setup > 0 ? (setup - implementationCost) / setup * 100 : null;
-        const measurable = value => value !== null && Number.isFinite(value);
-
-        put("setup-result", money(setup));
-        put(
-          "setup-explanation",
-          numberFormat.format(hours) + " horas × " + money(hourly) +
-          " × multiplicador " + numberFormat.format(multiplier) + "."
-        );
-        put("monthly-result", money(monthly));
-        put(
-          "monthly-explanation",
-          percent(rate * 100) + " del setup (" + money(maintenanceFee) +
-          ") + herramientas y APIs con multiplicador (" + money(toolsPrice) + ")."
-        );
-        put("included-result", integerFormat.format(included));
-        put("overage-result", money(overage) + " / 100");
-        put(
-          "overage-explanation",
-          integerFormat.format(extraOperations) + " operaciones adicionales previstas: " +
-          integerFormat.format(blocks) + " bloques iniciados × " + money(overage) +
-          " = " + money(extraCharge) + " al mes."
-        );
-        put("margin-result", measurable(annualMargin) ? percent(annualMargin) : "No calculable");
-        put(
-          "margin-explanation",
-          annualMargin === null
-            ? "Sin ingresos no se puede dividir el resultado por el precio."
-            : !Number.isFinite(annualMargin)
-              ? "Los valores ingresados exceden la precisión numérica disponible para este margen."
-              : "(" + money(annualRevenue) + " de ingreso - " + money(annualCosts) +
-                " de costos) ÷ " + money(annualRevenue) + "."
-        );
-        put("annual-result", money(annualRevenue));
-        put(
-          "annual-explanation",
-          money(setup) + " de setup + 12 × " + money(monthlyTotal) +
-          " mensuales, incluido el excedente esperado."
-        );
-        put(
-          "monthly-total",
-          "Cobro mensual al volumen esperado: " + money(monthlyTotal) +
-          " para " + integerFormat.format(volume) + " operaciones."
-        );
-        put(
-          "setup-margin",
-          setupMargin === null
-            ? "Margen de implementación: no calculable porque el setup es cero."
-            : !Number.isFinite(setupMargin)
-              ? "Margen de implementación: fuera del rango numérico disponible."
-              : "Margen de implementación: " + percent(setupMargin) +
-                ", después de valorizar tus horas."
-        );
-        put(
-          "profit-result",
-          "Resultado anual después de los costos considerados: " + money(annualProfit) + "."
-        );
-
-        if (salary > 0) {
-          const monthlySalaryRatio = monthlyTotal / salary * 100;
-          const annualSalaryRatio = annualRevenue / (salary * 12) * 100;
-          put(
-            "value-anchor",
-            Number.isFinite(monthlySalaryRatio) && Number.isFinite(annualSalaryRatio)
-              ? "Ancla de valor: el cobro mensual estimado equivale a " +
-                percent(monthlySalaryRatio) + " del sueldo de " +
-                money(salary) + ". El ingreso del primer año equivale a " +
-                percent(annualSalaryRatio) +
-                " de 12 sueldos. Es una comparación, no un ahorro garantizado."
-              : "El sueldo ingresado es demasiado pequeño para calcular la comparación."
-          );
-        } else {
-          put("value-anchor", "Ingresa un sueldo opcional para comparar tu cotización con el valor del rol reemplazado.");
-        }
-
-        $("zero-warning").hidden = monthly !== 0;
-        $("no-maintenance-warning").hidden = rate !== 0 || monthly === 0;
-
-        const warnings = [];
-        if (multiplier < 1) {
-          warnings.push("Tu multiplicador es menor que 1: cotizas los componentes basados en costo por debajo de su costo.");
-        }
-        if (annualProfit < 0) {
-          warnings.push("La proyección anual presenta una pérdida de " + money(Math.abs(annualProfit)) + ".");
-        }
-        if (setup === 0 && rate > 0) {
-          warnings.push("El setup es cero, por lo que aplicar un porcentaje no genera honorarios de mantención.");
-        }
-        if (extraOperations > 0 && overage === 0) {
-          warnings.push("El volumen supera lo incluido y tu tarifa del excedente es cero: esas operaciones se entregan sin cobro adicional.");
-        }
-        $("loss-warning").hidden = warnings.length === 0;
-        put("loss-warning", warnings.join(" "));
-
-        renderChart(setup, monthlyTotal, maintenanceFee);
-
-        quote = [
-          "COTIZACIÓN ESTIMADA - AUTOMATIZACIÓN CON IA",
-          "",
-          "Implementación (pago único): " + money(setup) + ".",
-          "Honorarios de mantención mensual: " + money(maintenanceFee) +
-            " (" + percent(rate * 100) + " del setup).",
-          "Herramientas y APIs mensuales: " + money(toolsPrice) + ".",
-          "Mensualidad base: " + money(monthly) + ".",
-          "Umbral incluido: " + integerFormat.format(included) + " operaciones al mes.",
-          "El umbral se reinicia cada mes y no se acumula.",
-          "Precio del excedente: " + money(overage) + " por cada bloque de 100 operaciones adicionales iniciado.",
-          "",
-          "PROYECCIÓN A 12 MESES",
-          "Volumen esperado: " + integerFormat.format(volume) + " operaciones al mes.",
-          "Excedente mensual estimado: " + money(extraCharge) +
-            " (" + integerFormat.format(blocks) + " bloques).",
-          "Cobro mensual estimado con excedente: " + money(monthlyTotal) + ".",
-          "Total estimado a 12 meses: " + money(annualRevenue) + ".",
-          "",
-          "El total incluye implementación y 12 mensualidades completas, con el mismo volumen cada mes.",
-          "Montos en USD. No incluye impuestos ni comisiones.",
-          "Los importes se muestran con dos decimales; el total se calcula sin redondeos intermedios."
-        ].join("\n");
-
-        $("copy-quote").disabled = copying;
-      }
-
-      function legacyCopy(text) {
-        const textarea = document.createElement("textarea");
-        textarea.value = text;
-        textarea.readOnly = true;
-        textarea.tabIndex = -1;
-        textarea.style.cssText = "position:fixed;top:0;left:0;width:1px;height:1px;opacity:0;font-size:16px;";
-        const previous = document.activeElement;
-        document.body.appendChild(textarea);
-        let success = false;
-        try {
-          textarea.focus({ preventScroll: true });
-          textarea.select();
-          textarea.setSelectionRange(0, textarea.value.length);
-          success = typeof document.execCommand === "function" && document.execCommand("copy");
-        } catch {
-          success = false;
-        } finally {
-          textarea.remove();
-          if (previous && typeof previous.focus === "function") {
-            previous.focus({ preventScroll: true });
-          }
-        }
-        return success;
-      }
-
-      $("copy-quote").addEventListener("click", async () => {
-        if (copying) return;
-        clearTimeout(timer);
-        update();
-        if (!quote) return;
-
-        const text = quote;
-        const copiedRevision = revision;
-        copying = true;
-        $("copy-quote").disabled = true;
-        put("copy-quote", "Copiando...");
-
-        let copied = false;
-        try {
-          if (window.isSecureContext && navigator.clipboard &&
-              typeof navigator.clipboard.writeText === "function") {
-            await navigator.clipboard.writeText(text);
-            copied = true;
-          }
-        } catch {
-          copied = false;
-        }
-        if (!copied && revision === copiedRevision) {
-          copied = legacyCopy(text);
-        }
-
-        copying = false;
-        $("copy-quote").disabled = !quote;
-
-        if (revision !== copiedRevision) {
-          put("copy-quote", "Copiar cotización");
-          put("copy-status", copied
-            ? "Se copió la cotización anterior. Los datos cambiaron; vuelve a copiar la versión actual."
-            : "Los datos cambiaron. Vuelve a copiar la cotización actual.");
-          return;
-        }
-
-        if (copied) {
-          put("copy-quote", "Cotización copiada");
-          put("copy-status", "Lista para pegar en un correo o WhatsApp.");
-        } else {
-          put("copy-quote", "Reintentar copia");
-          put("copy-status", "No se pudo copiar automáticamente. Puedes copiar el texto de abajo.");
-          $("quote-text").value = text;
-          $("copy-fallback").hidden = false;
-          $("quote-text").focus();
-          $("quote-text").select();
-          $("quote-text").setSelectionRange(0, text.length);
-        }
+  function renderDiscount(v,c) {
+    const factor = 1 - v.discount / 100;
+    const annual = c.annual * factor;
+    const profit = annual - c.costs;
+    const originalMargin = margin(c.annual,c.costs);
+    const discountedMargin = margin(annual,c.costs);
+    const lost = c.annual - annual;
+    const rows = [
+      ["Implementación",money(c.setup),money(c.setup * factor)],
+      ["Mensualidad base",money(c.monthly),money(c.monthly * factor)],
+      ["Mensualidad con excedente previsto",money(c.total),money(c.total * factor)],
+      ["Ingreso a 12 meses",money(c.annual),money(annual)],
+      ["Costos considerados a 12 meses",money(c.costs),money(c.costs)],
+      ["Resultado después de costos",money(c.profit),money(profit)],
+      ["Margen real a 12 meses",pct(originalMargin),pct(discountedMargin)]
+    ];
+    const fragment = document.createDocumentFragment();
+    for (const row of rows) {
+      const tr = element("tr");
+      row.forEach((text,index) => {
+        const cell = element(index === 0 ? "th" : "td","",text);
+        if (index === 0) cell.scope = "row";
+        tr.appendChild(cell);
       });
+      fragment.appendChild(tr);
+    }
+    $("discount-table").replaceChildren(fragment);
+    const consumed = c.profit > 0 ? lost / c.profit * 100 : NaN;
+    let impact = "Con " + pct(v.discount) + " de descuento dejas de facturar " + money(lost) + " en 12 meses por cliente.";
+    if (Number.isFinite(consumed)) impact += " Eso consume " + pct(consumed) + " de tu resultado anual original.";
+    if (Number.isFinite(originalMargin) && Number.isFinite(discountedMargin)) {
+      impact += " El margen baja " + num(Math.max(0,originalMargin - discountedMargin)) + " puntos porcentuales.";
+    }
+    put("discount-impact",impact);
+    const warnings = [];
+    if (c.profit > 0 && lost > c.profit / 2) {
+      warnings.push("El descuento se come más de la mitad de tu resultado anual original.");
+    }
+    if (profit < 0) warnings.push("Con este precio, pierdes " + money(-profit) + " después de los costos considerados.");
+    else if (profit === 0 && annual > 0) warnings.push("Este precio no deja resultado después de los costos considerados.");
+    if (c.profit <= 0 && v.discount > 0) warnings.push("Tu precio actual ya no deja un resultado positivo que permita absorber descuentos.");
+    if (warnings.length) warnings.push("Baja el alcance y no el precio. Reduce entregables y vuelve a calcular.");
+    $("discount-warning").hidden = warnings.length === 0;
+    put("discount-warning",warnings.join(" "));
+  }
 
-      $("calculator").addEventListener("input", () => {
-        clearTimeout(timer);
-        resetCopy();
-        timer = setTimeout(update, 120);
-      });
-      $("calculator").addEventListener("change", () => {
-        clearTimeout(timer);
-        update();
-      });
-      $("calculator").addEventListener("submit", event => event.preventDefault());
-      update();
-    })();
-  </script>
+  function invalidateExports() {
+    revision++;
+    quote = "";
+    validState = false;
+    $("copy-quote").disabled = true;
+    $("share-quote").disabled = true;
+    $("save-values").disabled = true;
+    $("copy-fallback").hidden = true;
+    $("share-fallback").hidden = true;
+    $("quote-text").value = "";
+    $("share-text").value = "";
+    put("copy-status","");
+  }
+
+  function update(save = true) {
+    invalidateExports();
+    const v = {};
+    const errors = [];
+    for (const [id,label,whole] of definitions) {
+      const value = read(id);
+      v[id] = value;
+      let error = "";
+      if (!Number.isFinite(value) || value < 0) {
+        error = "En " + label + ", ingresa un número válido de cero o más, sin separadores de miles.";
+      } else if (whole && !Number.isSafeInteger(value)) {
+        error = "En " + label + ", ingresa un número entero válido.";
+      } else if (value > 1e12) {
+        error = "En " + label + ", el máximo es 1.000.000.000.000.";
+      } else if (id === "multiplier" && (value <= 0 || !Number.isFinite((1 - 1 / value) * 100))) {
+        error = "El multiplicador necesita un valor positivo que permita calcular el margen.";
+      } else if (id === "target" && value >= 100) {
+        error = "El margen objetivo debe ser menor que 100%.";
+      } else if (id === "discount" && value > 100) {
+        error = "El descuento debe estar entre 0% y 100%.";
+      }
+      $(id).setAttribute("aria-invalid",String(Boolean(error)));
+      if (error) errors.push(error);
+    }
+    const role = Number.isFinite(v.salary) && v.salary > 0;
+    $("maintenance").querySelectorAll("[data-role]").forEach(option => {
+      option.disabled = !role;
+      option.hidden = !role;
+    });
+    if (!role && Number($("maintenance").value) > 20) $("maintenance").value = "15";
+    v.maintenance = Number($("maintenance").value);
+    if (![0,10,15,20,30,40,50].includes(v.maintenance)) errors.push("Selecciona un porcentaje de mantención válido.");
+
+    const multiplierValid = Number.isFinite(v.multiplier) && v.multiplier > 0 &&
+      v.multiplier <= 1e12 && Number.isFinite((1 - 1 / v.multiplier) * 100);
+    if (multiplierValid) {
+      const markup = (v.multiplier - 1) * 100;
+      const real = (1 - 1 / v.multiplier) * 100;
+      put("markup-result",pct(markup));
+      put("multiplier-margin",pct(real));
+      renderBars(markup,real);
+      put("margin-example","Con costo de " + money(100) + " y multiplicador " + num(v.multiplier) +
+        ", cobras " + money(100 * v.multiplier) + ". La diferencia de " + money(100 * (v.multiplier - 1)) +
+        " equivale a " + pct(real) + " del precio.");
+    } else {
+      put("markup-result","Sin calcular");
+      put("multiplier-margin","Sin calcular");
+      put("margin-example","Ingresa un multiplicador válido para comparar.");
+      renderBars(NaN,NaN);
+    }
+    put("target-result",Number.isFinite(v.target) && v.target >= 0 && v.target < 100
+      ? "Para lograr " + pct(v.target) + " de margen sobre un costo, el multiplicador correcto es aproximadamente " +
+        clean(mf.format(1 / (1 - v.target / 100))) + ". Fórmula: 1 ÷ (1 - " + num(v.target) + " / 100)."
+      : "Ingresa un margen objetivo válido menor que 100%.");
+
+    if (Number.isFinite(v.discount) && v.discount >= 0 && v.discount <= 100) {
+      $("discount-range").value = String(v.discount);
+      $("discount-range").setAttribute("aria-valuetext",pct(v.discount) + " de descuento");
+    }
+
+    $("validation").hidden = errors.length === 0;
+    put("validation-text",errors.join(" "));
+    $("results-invalid").hidden = errors.length === 0;
+    for (const id of ["results-region","chart-section","goals-results","break-results","plans","discount-results"]) {
+      $(id).hidden = errors.length > 0;
+    }
+    if (errors.length) {
+      put("storage-status","Hay datos pendientes de corregir. Se conserva el último guardado válido.");
+      put("copy-status","Corrige los datos para copiar o compartir.");
+      return;
+    }
+
+    const c = calculate(v);
+    put("setup-result",money(c.setup));
+    put("setup-explanation",num(v.hours) + " horas × " + money(v.hourly) + " × multiplicador " + num(v.multiplier) + ".");
+    put("monthly-result",money(c.monthly));
+    put("monthly-explanation",pct(v.maintenance) + " del setup (" + money(c.fee) +
+      ") + herramientas y APIs con multiplicador (" + money(c.toolsPrice) + ").");
+    put("included-result",integer(v.included));
+    put("overage-result",money(v.overage) + " / 100");
+    put("overage-explanation",integer(c.extra) + " operaciones adicionales dan " +
+      integer(c.blocks) + " bloques iniciados × " + money(v.overage) + ", o sea " + money(c.extraCharge) + " al mes.");
+    put("margin-result",pct(margin(c.annual,c.costs)));
+    put("margin-explanation",c.annual > 0
+      ? "(" + money(c.annual) + " de ingreso - " + money(c.costs) + " de costos) ÷ ingreso."
+      : "Sin ingresos no se puede calcular un margen sobre el precio.");
+    put("annual-result",money(c.annual));
+    put("annual-explanation",money(c.setup) + " de setup + 12 × " + money(c.total) + " mensuales, con el excedente esperado.");
+    put("monthly-total","Cobras " + money(c.total) + " al mes para " + integer(v.volume) + " operaciones.");
+    put("setup-margin","El margen de implementación queda en " + pct(margin(c.setup,c.cost)) + ", después de valorizar tus horas.");
+    put("profit-result","El resultado anual, después de los costos considerados, es " + money(c.profit) + ".");
+    const salaryRatio = c.total / v.salary * 100;
+    const annualSalaryRatio = c.annual / (12 * v.salary) * 100;
+    put("value-anchor",v.salary > 0
+      ? Number.isFinite(salaryRatio) && Number.isFinite(annualSalaryRatio)
+        ? "El cobro mensual equivale a " + pct(salaryRatio) + " del sueldo de " + money(v.salary) +
+          ". El ingreso del primer año equivale a " + pct(annualSalaryRatio) + " de 12 sueldos. No es ahorro garantizado."
+        : "El sueldo ingresado es demasiado pequeño para calcular la comparación."
+      : "Ingresa un sueldo opcional para comparar la cotización con el valor del rol reemplazado.");
+
+    $("zero-warning").hidden = c.monthly !== 0;
+    $("no-maintenance-warning").hidden = v.maintenance !== 0 || c.monthly === 0;
+    const warnings = [];
+    if (v.multiplier < 1) warnings.push("Tu multiplicador es menor que 1, así que cotizas por debajo de su costo los componentes basados en costo.");
+    if (c.profit < 0) warnings.push("La proyección anual da una pérdida de " + money(-c.profit) + ".");
+    if (c.setup === 0 && v.maintenance > 0) warnings.push("Con setup cero, el porcentaje de mantención no genera honorarios.");
+    if (c.extra > 0 && v.overage === 0) warnings.push("El volumen supera lo incluido y las operaciones adicionales se entregan sin cobro.");
+    if (c.monthly < c.tools) warnings.push("La mensualidad base no cubre las herramientas, así que la recuperación inicial puede revertirse con el tiempo.");
+    $("loss-warning").hidden = !warnings.length;
+    put("loss-warning",warnings.join(" "));
+
+    renderChart(c.setup,c.total,c.fee);
+    renderGoals(v,c);
+    renderBreak(c);
+    const plans = renderPlans(v);
+    renderDiscount(v,c);
+
+    const serviceName = $("service").selectedOptions[0].textContent;
+    quote = [
+      "COTIZACIÓN ESTIMADA - " + serviceName.toLocaleUpperCase("es-CL"),
+      "",
+      "PROPUESTA BASE / PLAN RECOMENDADO",
+      "Implementación (pago único): " + money(c.setup) + ".",
+      "Honorarios de mantención mensual: " + money(c.fee) + " (" + pct(v.maintenance) + " del setup).",
+      "Herramientas y APIs mensuales: " + money(c.toolsPrice) + ".",
+      "Mensualidad base: " + money(c.monthly) + ".",
+      "Umbral incluido: " + integer(v.included) + " operaciones al mes.",
+      "El umbral se reinicia cada mes y no se acumula.",
+      "Excedente: " + money(v.overage) + " por bloque de 100 operaciones adicionales iniciado.",
+      "",
+      "PROYECCIÓN A 12 MESES PARA UN CLIENTE",
+      "Volumen esperado: " + integer(v.volume) + " operaciones al mes.",
+      "Excedente mensual estimado: " + money(c.extraCharge) + " (" + integer(c.blocks) + " bloques).",
+      "Cobro mensual con excedente: " + money(c.total) + ".",
+      "Total estimado a 12 meses: " + money(c.annual) + ".",
+      "",
+      "OPCIONES DE ALCANCE",
+      ...plans.flatMap(plan => [
+        "",
+        plan.name.toLocaleUpperCase("es-CL") + (plan.name === "Recomendado" ? " (OPCIÓN RECOMENDADA)" : ""),
+        ...plan.scope.map(line => "- " + line + "."),
+        "Implementación: " + money(plan.setup) + ". Mensualidad base: " + money(plan.monthly) + ".",
+        "Incluye " + integer(plan.included) + " operaciones al mes.",
+        "Excedente: " + money(v.overage) + " por bloque de 100 iniciado.",
+        "Al volumen esperado, mensualidad con excedente: " + money(plan.total) + ".",
+        plan.fee > 0
+          ? "Mantención de lo entregado. Horas y tiempos de respuesta por acordar; mejoras nuevas se cotizan aparte."
+          : "Sin honorarios de mantención. Soporte y cambios posteriores se cotizan aparte."
+      ]),
+      "",
+      "CONDICIONES",
+      "Los alcances son estimativos y deben validarse antes de contratar.",
+      "La proyección incluye implementación y 12 mensualidades completas, con el mismo volumen cada mes.",
+      "Precios sin descuentos. Montos en USD, sin impuestos ni comisiones.",
+      "Importes con dos decimales; totales calculados sin redondeos intermedios."
+    ].join("\n");
+
+    validState = true;
+    $("copy-quote").disabled = copying;
+    $("share-quote").disabled = copying;
+    $("save-values").disabled = false;
+    if (save) persist();
+  }
+
+  function legacyCopy(text) {
+    const area = document.createElement("textarea");
+    const previous = document.activeElement;
+    area.value = text;
+    area.readOnly = true;
+    area.style.cssText = "position:fixed;top:0;left:0;width:1px;height:1px;opacity:0;font-size:16px";
+    document.body.appendChild(area);
+    let success = false;
+    try {
+      area.focus({preventScroll:true});
+      area.select();
+      area.setSelectionRange(0,text.length);
+      success = typeof document.execCommand === "function" && document.execCommand("copy");
+    } catch {
+      success = false;
+    } finally {
+      area.remove();
+      if (previous && typeof previous.focus === "function") previous.focus({preventScroll:true});
+    }
+    return success;
+  }
+
+  async function copyText(text,kind) {
+    if (copying) return;
+    copying = true;
+    const currentRevision = revision;
+    $("copy-quote").disabled = true;
+    $("share-quote").disabled = true;
+    put("copy-status","Copiando...");
+    let success = false;
+    try {
+      if (window.isSecureContext && navigator.clipboard && navigator.clipboard.writeText) {
+        await navigator.clipboard.writeText(text);
+        success = true;
+      }
+    } catch {}
+    if (!success && revision === currentRevision) success = legacyCopy(text);
+    copying = false;
+    $("copy-quote").disabled = !validState;
+    $("share-quote").disabled = !validState;
+    if (revision !== currentRevision) {
+      put("copy-status",success
+        ? "Se copió la versión anterior. Los datos cambiaron; vuelve a copiar."
+        : "Los datos cambiaron. Vuelve a generar la copia.");
+      return;
+    }
+    if (success) {
+      put("copy-status",kind === "quote" ? "Cotización copiada. Lista para pegar en un correo o WhatsApp." : "Enlace copiado. Incluye los valores actuales.");
+    } else {
+      const isQuote = kind === "quote";
+      const area = $(isQuote ? "quote-text" : "share-text");
+      area.value = text;
+      $(isQuote ? "copy-fallback" : "share-fallback").hidden = false;
+      area.focus();
+      area.select();
+      area.setSelectionRange(0,text.length);
+      put("copy-status","No se pudo copiar automáticamente. El texto quedó seleccionado para copiarlo manualmente.");
+    }
+  }
+
+  $("copy-quote").addEventListener("click",() => {
+    if (validState && quote) copyText(quote,"quote");
+  });
+
+  $("share-quote").addEventListener("click",() => {
+    if (!validState || copying) return;
+    const url = new URL(location.href);
+    if (!["http:","https:"].includes(url.protocol)) {
+      put("copy-status","Para compartir un enlace que otra persona pueda abrir, publica este archivo en una dirección HTTP o HTTPS. Mientras tanto, puedes copiar la cotización.");
+      return;
+    }
+    // Comparte únicamente los parámetros de la calculadora.
+    url.search = "";
+    url.hash = "";
+    url.searchParams.set("calc",VERSION);
+    for (const [key,value] of Object.entries(snapshot())) url.searchParams.set(key,value);
+    $("share-text").value = url.href;
+    $("share-fallback").hidden = false;
+    copyText(url.href,"share");
+  });
+
+  $("save-values").addEventListener("click",() => persist(true));
+
+  $("reset-values").addEventListener("click",() => {
+    apply(defaults);
+    lastSaved = "";
+    let message = "Valores originales restaurados.";
+    try {
+      localStorage.removeItem(KEY);
+      message += " Guardado local eliminado.";
+    } catch {
+      message += " No se pudo eliminar el guardado local.";
+    }
+    try {
+      const url = new URL(location.href);
+      url.searchParams.delete("calc");
+      for (const key of keys) url.searchParams.delete(key);
+      if (url.href !== location.href) history.replaceState(null,"",url.href);
+    } catch {
+      message += " No se pudo limpiar la dirección; el enlace anterior conserva sus parámetros.";
+    }
+    update(false);
+    put("storage-status",message);
+  });
+
+  $("service").addEventListener("change",() => {
+    const preset = presets[$("service").value];
+    if (preset && preset.values) apply(preset.values);
+  });
+
+  for (const key of keys) {
+    const el = $(key);
+    el.addEventListener(el.tagName === "SELECT" ? "change" : "input",() => update());
+  }
+
+  $("discount-range").addEventListener("input",() => {
+    $("discount").value = $("discount-range").value;
+    update();
+  });
+
+  $("calculator").addEventListener("submit",event => event.preventDefault());
+  load();
+  update();
+  if (bootMessage) {
+    put("storage-status",bootMessage + " " + $("storage-status").textContent);
+  }
+})();
+</script>
 </body>
 </html>
