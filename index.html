@@ -166,8 +166,11 @@
     }
     body::before {
       content:""; position:fixed; inset:0; pointer-events:none; z-index:0; opacity:.5;
-      background-image:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22200%22%20height%3D%22200%22%20viewBox%3D%220%200%20200%20200%22%20role%3D%22img%22%20aria-labelledby%3D%22baldosa-titulo%22%3E%3Ctitle%20id%3D%22baldosa-titulo%22%3EPapel%20pautado%20de%20libro%20contable%3C%2Ftitle%3E%3Crect%20width%3D%22200%22%20height%3D%22200%22%20fill%3D%22%230b0b0c%22%2F%3E%3Cpath%20d%3D%22M0%2012.5H200M0%2037.5H200M0%2062.5H200M0%2087.5H200M0%20112.5H200M0%20137.5H200M0%20162.5H200M0%20187.5H200M50%200V200M150%200V200%22%20fill%3D%22none%22%20stroke%3D%22%232b2b30%22%20stroke-width%3D%221%22%20opacity%3D%220.35%22%2F%3E%3C%2Fsvg%3E");
-      background-size:200px 200px;
+      background-image:url("img/textura.webp");
+      background-size:cover;
+      background-position:center top;
+      background-repeat:no-repeat;
+      opacity:.55;
       mask-image:radial-gradient(circle at 50% 0%, #000 0%, transparent 72%);
       -webkit-mask-image:radial-gradient(circle at 50% 0%, #000 0%, transparent 72%);
     }
@@ -339,11 +342,24 @@
     @keyframes dibujar { to { stroke-dashoffset:0; } }
     .cifra-viva { font-variant-numeric:tabular-nums lining-nums; }
     .header-grid { display:grid; grid-template-columns:minmax(0,1fr) minmax(0,500px); gap:var(--s7); align-items:center; }
-    .header-art { width:100%; height:auto; }
+    .hero { margin:0; }
+    .hero-img { display:block; width:100%; height:auto; border-radius:18px; }
+    .hero-pie {
+      display:grid; grid-template-columns:repeat(3,auto); justify-content:space-between; align-items:baseline;
+      gap:var(--s2) var(--s4); margin-top:var(--s4);
+      font-size:.72rem; letter-spacing:.12em; text-transform:uppercase; color:var(--muted);
+    }
+    .hero-pie .rot { display:flex; flex-direction:column; gap:2px; line-height:1.3; }
+    .hero-pie .brecha { text-align:center; }
+    .hero-pie .aparente { text-align:right; }
+    .hero-pie b { font-size:1.5rem; letter-spacing:-.03em; text-transform:none; font-weight:700; }
+    .hero-pie .real b { color:var(--accent); text-shadow:0 0 30px rgba(216,163,74,.55); }
+    .hero-pie .aparente b { color:var(--violeta); text-shadow:0 0 30px rgba(160,107,255,.5); }
+    .hero-pie .brecha { color:var(--muted); opacity:.7; }
     .figura-wrap { margin:var(--s6) 0 var(--s5); padding-top:var(--s5); border-top:1px solid var(--border); }
     .figura { width:100%; height:auto; max-width:720px; }
     .figura-wrap figcaption { margin-top:var(--s3); color:var(--muted); font-size:.82rem; font-family:system-ui,sans-serif; }
-    .regla-sep { height:40px; margin:var(--s6) 0; background:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%221200%22%20height%3D%2240%22%20viewBox%3D%220%200%201200%2040%22%20role%3D%22img%22%20aria-labelledby%3D%22separador-titulo%22%3E%3Ctitle%20id%3D%22separador-titulo%22%3ESeparador%20de%20secci%C3%B3n%3C%2Ftitle%3E%3Crect%20width%3D%221200%22%20height%3D%2240%22%20fill%3D%22%230b0b0c%22%2F%3E%3Cpath%20d%3D%22M0%2020H550M650%2020H1200%22%20fill%3D%22none%22%20stroke%3D%22%232b2b30%22%20stroke-width%3D%221%22%2F%3E%3Cpath%20d%3D%22M576%2016V24M592%2013V27M608%2010V30%22%20fill%3D%22none%22%20stroke%3D%22%239b968d%22%20stroke-width%3D%222%22%2F%3E%3Cpath%20d%3D%22M624%2012V28%22%20fill%3D%22none%22%20stroke%3D%22%23d8a34a%22%20stroke-width%3D%222%22%2F%3E%3C%2Fsvg%3E") center/1200px 40px no-repeat; }
+    .regla-sep { height:110px; margin:var(--s5) 0; background:url("img/separador.webp") center center/100% auto no-repeat; filter:brightness(1.6) saturate(1.25); }
     @media(max-width:900px) { .header-grid { grid-template-columns:1fr; gap:var(--s5); } }
 
     @media (prefers-reduced-motion:reduce) {
@@ -440,8 +456,9 @@
 
     /* Los separadores se vuelven un filo de luz */
     .regla-sep {
-      height:1px; background:linear-gradient(90deg,transparent,rgba(216,163,74,.55),rgba(160,107,255,.45),transparent);
-      margin:var(--s7) 0;
+      height:110px; margin:var(--s5) 0;
+      background:url("img/separador.webp") center center/100% auto no-repeat;
+      filter:brightness(1.7) saturate(1.3);
     }
 
     /* Entrada con escala */
@@ -488,7 +505,7 @@
       <h1>¿Cuánto cobrar por tu automatización con IA?</h1>
       <p class="intro">Arma tu oferta, calcula implementación y mantención, y descubre cuántos clientes necesitas para tu meta mensual. Todos los montos están en USD.</p>
       </div>
-      <svg class="header-art" xmlns="http://www.w3.org/2000/svg" width="520" height="380" viewBox="0 0 520 380" role="img" aria-labelledby="cabecera-titulo cabecera-desc"><title id="cabecera-titulo">Margen aparente y margen real</title><desc id="cabecera-desc">Un multiplicador de 1,30 representa un margen real de 23,08%, frente al 30% aparente. La brecha es de 6,92 puntos.</desc><g font-family="InterVar, system-ui, sans-serif"><text x="40" y="37" fill="#f2efe9" font-size="15" letter-spacing="2">LA DIFERENCIA DEL MARGEN</text><text x="40" y="62" fill="#9b968d" font-size="13">Multiplicador 1,30 · Base porcentual</text><path d="M40 79H480" stroke="#2b2b30" stroke-width="1"/><g fill="none" stroke="#2b2b30" stroke-width="1"><path d="M80 130H480M80 190H480M80 250H480"/><path d="M80 110V310H480"/><path d="M74 130H80M74 190H80M74 250H80M74 310H80"/></g><g fill="#9b968d" font-size="12" text-anchor="end"><text x="64" y="134">30%</text><text x="64" y="194">20%</text><text x="64" y="254">10%</text><text x="64" y="314">0%</text></g><rect x="140" y="130" width="80" height="180" fill="#9b968d"/><rect x="350" y="171.52" width="80" height="138.48" fill="#d8a34a"/><path d="M264 130H278V171.52H264" fill="none" stroke="#f2efe9" stroke-width="1"/><text x="290" y="155" fill="#f2efe9" font-size="14">6,92 puntos</text><path d="M80 310H480" stroke="#9b968d" stroke-width="1"/><text x="180" y="341" fill="#9b968d" font-size="14" text-anchor="middle">APARENTE 30%</text><text x="390" y="341" fill="#d8a34a" font-size="14" text-anchor="middle">REAL 23,08%</text><path d="M40 363H480" stroke="#2b2b30" stroke-width="1"/></g></svg>
+      <figure class="hero"><img class="hero-img" src="img/hero.webp" width="1400" height="788" loading="eager" decoding="async" alt="Dos columnas de vidrio de distinta altura. La baja, en ambar, es el margen real. La alta, en violeta, es el que aparenta el multiplicador."><figcaption class="hero-pie"><span class="rot real"><b>23,08%</b>margen real</span><span class="rot brecha">6,92 puntos de diferencia</span><span class="rot aparente"><b>30%</b>lo que aparenta</span></figcaption></figure>
     </div>
     <nav class="navigation" aria-label="Secciones de la calculadora">
       <a href="#inputs-title">Proyecto</a>

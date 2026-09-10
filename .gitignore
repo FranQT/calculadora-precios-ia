@@ -4,8 +4,9 @@ node_modules
 
 # temporales de trabajo
 .playwright-cli/
-prompt_v*.txt
-salida_v*.txt
+prompt_*.txt
+salida_*.txt
+index_pre_*.html
 index_backup_*.html
 index_pre_*.html
 v3.html
