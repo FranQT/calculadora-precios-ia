@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="color-scheme" content="dark">
+  <meta name="theme-color" content="#0c1018">
   <title>Calculadora de precios | Automatización con IA</title>
   <meta name="description" content="Calcula implementación, mantención y excedentes de tu automatización con IA. Compara markup y margen real y proyecta tus ingresos a 12 meses.">
   <meta property="og:title" content="Calculadora de precios | Automatización con IA">
@@ -12,7 +13,7 @@
   <meta property="og:url" content="https://calculadora-precios-ia.vercel.app">
   <meta property="og:locale" content="es_CL">
   <!-- Algunos servicios de vista previa requieren una imagen HTTPS y no admiten SVG en data URI. -->
-  <meta property="og:image" content="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='630' viewBox='0 0 1200 630'%3E%3Crect width='1200' height='630' fill='%230c1018'/%3E%3Crect x='50' y='50' width='1100' height='530' rx='28' fill='%23141b27' stroke='%232a3547' stroke-width='2'/%3E%3Cpath d='M85 120H220' stroke='%2380e2c2' stroke-width='8'/%3E%3Cg font-family='Arial,sans-serif'%3E%3Ctext x='85' y='215' fill='%23eff3fa' font-size='62' font-weight='700'%3ECalculadora de precios%3C/text%3E%3Ctext x='85' y='285' fill='%23a9b5c8' font-size='36'%3EAutomatizaci%C3%B3n con IA%3C/text%3E%3Ctext x='85' y='405' fill='%2380e2c2' font-size='54' font-weight='700'%3E1,30 no es 30%25. Es 23,08%25.%3C/text%3E%3Ctext x='85' y='505' fill='%23a9b5c8' font-size='28'%3EImplementaci%C3%B3n, mantenci%C3%B3n y margen real.%3C/text%3E%3C/g%3E%3C/svg%3E">
+  <meta property="og:image" content="data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20width%3D%271200%27%20height%3D%27630%27%20viewBox%3D%270%200%201200%20630%27%3E%3Crect%20width%3D%271200%27%20height%3D%27630%27%20fill%3D%27%230c1018%27%2F%3E%3Crect%20x%3D%2750%27%20y%3D%2750%27%20width%3D%271100%27%20height%3D%27530%27%20rx%3D%2728%27%20fill%3D%27%23141b27%27%20stroke%3D%27%232a3547%27%20stroke-width%3D%272%27%2F%3E%3Crect%20x%3D%2796%27%20y%3D%27104%27%20width%3D%2726%27%20height%3D%2772%27%20rx%3D%275%27%20fill%3D%27%239dbbff%27%2F%3E%3Crect%20x%3D%27136%27%20y%3D%27128%27%20width%3D%2726%27%20height%3D%2748%27%20rx%3D%275%27%20fill%3D%27%2380e2c2%27%2F%3E%3Cg%20font-family%3D%27Arial%2Csans-serif%27%3E%3Ctext%20x%3D%2796%27%20y%3D%27268%27%20fill%3D%27%23eff3fa%27%20font-size%3D%2762%27%20font-weight%3D%27700%27%3ECalculadora%20de%20precios%3C%2Ftext%3E%3Ctext%20x%3D%2796%27%20y%3D%27330%27%20fill%3D%27%23a9b5c8%27%20font-size%3D%2734%27%3EAutomatizaci%C3%B3n%20con%20IA%3C%2Ftext%3E%3Ctext%20x%3D%2796%27%20y%3D%27452%27%20fill%3D%27%2380e2c2%27%20font-size%3D%2754%27%20font-weight%3D%27700%27%3E1%2C30%20no%20es%2030%25.%20Es%2023%2C08%25.%3C%2Ftext%3E%3Ctext%20x%3D%2796%27%20y%3D%27524%27%20fill%3D%27%23a9b5c8%27%20font-size%3D%2728%27%3EImplementaci%C3%B3n%2C%20mantenci%C3%B3n%20y%20margen%20real.%3C%2Ftext%3E%3C%2Fg%3E%3C%2Fsvg%3E">
   <meta property="og:image:alt" content="Calculadora de precios. Automatización con IA. 1,30 no es 30%. Es 23,08%.">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
@@ -20,9 +21,10 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Calculadora de precios | Automatización con IA">
   <meta name="twitter:description" content="1,30 no es 30%. Es 23,08%. Calcula tu margen real y proyecta tus ingresos a 12 meses.">
-  <meta name="twitter:image" content="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='630' viewBox='0 0 1200 630'%3E%3Crect width='1200' height='630' fill='%230c1018'/%3E%3Crect x='50' y='50' width='1100' height='530' rx='28' fill='%23141b27' stroke='%232a3547' stroke-width='2'/%3E%3Cpath d='M85 120H220' stroke='%2380e2c2' stroke-width='8'/%3E%3Cg font-family='Arial,sans-serif'%3E%3Ctext x='85' y='215' fill='%23eff3fa' font-size='62' font-weight='700'%3ECalculadora de precios%3C/text%3E%3Ctext x='85' y='285' fill='%23a9b5c8' font-size='36'%3EAutomatizaci%C3%B3n con IA%3C/text%3E%3Ctext x='85' y='405' fill='%2380e2c2' font-size='54' font-weight='700'%3E1,30 no es 30%25. Es 23,08%25.%3C/text%3E%3Ctext x='85' y='505' fill='%23a9b5c8' font-size='28'%3EImplementaci%C3%B3n, mantenci%C3%B3n y margen real.%3C/text%3E%3C/g%3E%3C/svg%3E">
-  <meta name="twitter:image:alt" content="Calculadora de precios. 1,30 no es 30%. Es 23,08%.">
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230c1018'/%3E%3Crect x='14' y='10' width='36' height='44' rx='7' fill='%23141b27' stroke='%2380e2c2' stroke-width='3'/%3E%3Cpath d='M22 21H42M22 33H27M37 33H42M22 43H27M37 43H42' stroke='%2380e2c2' stroke-width='4' stroke-linecap='round'/%3E%3C/svg%3E">
+  <meta name="twitter:image" content="data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20width%3D%271200%27%20height%3D%27630%27%20viewBox%3D%270%200%201200%20630%27%3E%3Crect%20width%3D%271200%27%20height%3D%27630%27%20fill%3D%27%230c1018%27%2F%3E%3Crect%20x%3D%2750%27%20y%3D%2750%27%20width%3D%271100%27%20height%3D%27530%27%20rx%3D%2728%27%20fill%3D%27%23141b27%27%20stroke%3D%27%232a3547%27%20stroke-width%3D%272%27%2F%3E%3Crect%20x%3D%2796%27%20y%3D%27104%27%20width%3D%2726%27%20height%3D%2772%27%20rx%3D%275%27%20fill%3D%27%239dbbff%27%2F%3E%3Crect%20x%3D%27136%27%20y%3D%27128%27%20width%3D%2726%27%20height%3D%2748%27%20rx%3D%275%27%20fill%3D%27%2380e2c2%27%2F%3E%3Cg%20font-family%3D%27Arial%2Csans-serif%27%3E%3Ctext%20x%3D%2796%27%20y%3D%27268%27%20fill%3D%27%23eff3fa%27%20font-size%3D%2762%27%20font-weight%3D%27700%27%3ECalculadora%20de%20precios%3C%2Ftext%3E%3Ctext%20x%3D%2796%27%20y%3D%27330%27%20fill%3D%27%23a9b5c8%27%20font-size%3D%2734%27%3EAutomatizaci%C3%B3n%20con%20IA%3C%2Ftext%3E%3Ctext%20x%3D%2796%27%20y%3D%27452%27%20fill%3D%27%2380e2c2%27%20font-size%3D%2754%27%20font-weight%3D%27700%27%3E1%2C30%20no%20es%2030%25.%20Es%2023%2C08%25.%3C%2Ftext%3E%3Ctext%20x%3D%2796%27%20y%3D%27524%27%20fill%3D%27%23a9b5c8%27%20font-size%3D%2728%27%3EImplementaci%C3%B3n%2C%20mantenci%C3%B3n%20y%20margen%20real.%3C%2Ftext%3E%3C%2Fg%3E%3C%2Fsvg%3E">
+  <meta name="twitter:image:alt" content="Calculadora de precios. Automatización con IA. 1,30 no es 30%. Es 23,08%.">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2064%2064%22%3E%3Crect%20width%3D%2264%22%20height%3D%2264%22%20rx%3D%2214%22%20fill%3D%22%230c1018%22%2F%3E%3Crect%20x%3D%2212%22%20y%3D%2211%22%20width%3D%2216%22%20height%3D%2242%22%20rx%3D%223%22%20fill%3D%22%239dbbff%22%2F%3E%3Crect%20x%3D%2236%22%20y%3D%2225%22%20width%3D%2216%22%20height%3D%2228%22%20rx%3D%223%22%20fill%3D%22%2380e2c2%22%2F%3E%3C%2Fsvg%3E">
+  <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2064%2064%22%3E%3Crect%20width%3D%2264%22%20height%3D%2264%22%20rx%3D%2214%22%20fill%3D%22%230c1018%22%2F%3E%3Crect%20x%3D%2212%22%20y%3D%2211%22%20width%3D%2216%22%20height%3D%2242%22%20rx%3D%223%22%20fill%3D%22%239dbbff%22%2F%3E%3Crect%20x%3D%2236%22%20y%3D%2225%22%20width%3D%2216%22%20height%3D%2228%22%20rx%3D%223%22%20fill%3D%22%2380e2c2%22%2F%3E%3C%2Fsvg%3E">
   <style>
     :root {
       --bg:#0c1018; --surface:#141b27; --field:#0d1420; --border:#2a3547;
@@ -166,10 +168,8 @@
     }
     body::before {
       content:""; position:fixed; inset:0; pointer-events:none; z-index:0; opacity:.5;
-      background-image:
-        linear-gradient(rgba(42,53,71,.16) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(42,53,71,.16) 1px, transparent 1px);
-      background-size:64px 64px;
+      background-image:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2240%22%20height%3D%2240%22%20viewBox%3D%220%200%2040%2040%22%3E%3Ccircle%20cx%3D%2220%22%20cy%3D%2220%22%20r%3D%221.5%22%20fill%3D%22%232a3547%22%20opacity%3D%220.5%22%2F%3E%3C%2Fsvg%3E");
+      background-size:40px 40px;
       mask-image:radial-gradient(circle at 50% 0%, #000 0%, transparent 72%);
       -webkit-mask-image:radial-gradient(circle at 50% 0%, #000 0%, transparent 72%);
     }
@@ -251,6 +251,8 @@
       border:1px solid color-mix(in srgb, var(--accent) 24%, transparent);
     }
     .h-icon svg { width:18px; height:18px; }
+    .brand { display:flex; align-items:center; gap:10px; margin-bottom:var(--s2); }
+    .brand-mark { width:22px; height:22px; flex:none; }
     select, button, summary { cursor:pointer; }
   </style>
 </head>
@@ -258,7 +260,7 @@
 <div class="progress" aria-hidden="true"><i></i></div>
 <main>
   <header>
-    <div class="eyebrow">Cotiza con números claros</div>
+    <div class="brand"><svg class="brand-mark" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40"><rect x="6" y="5" width="11" height="30" rx="2" fill="#9dbbff"/><rect x="23" y="15" width="11" height="20" rx="2" fill="#80e2c2"/></svg><span class="eyebrow">Cotiza con números claros</span></div>
     <h1>¿Cuánto cobrar por tu automatización con IA?</h1>
     <p class="intro">Arma tu oferta, calcula implementación y mantención, y descubre cuántos clientes necesitas para tu meta mensual. Todos los montos están en USD.</p>
     <nav class="navigation" aria-label="Secciones de la calculadora">
