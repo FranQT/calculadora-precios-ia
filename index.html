@@ -349,6 +349,115 @@
       .js-reveal .reveal.is-in > *,
       .js-reveal .reveal.is-in { animation:none; background-image:none; }
     }
+
+    /* ============ Vidrio, resplandor y profundidad ============ */
+    :root {
+      --violeta:#a06bff; --cian:#4fd8e8;
+      --glass:rgba(255,255,255,.045);
+      --glass-borde:rgba(255,255,255,.10);
+      --glow-acento:0 0 0 1px rgba(216,163,74,.22), 0 18px 60px -22px rgba(216,163,74,.55);
+      --glow-frio:0 0 0 1px rgba(160,107,255,.20), 0 22px 70px -26px rgba(160,107,255,.50);
+    }
+
+    /* Malla de color de fondo, en capas */
+    body {
+      background:
+        radial-gradient(900px 700px at 12% -6%, rgba(160,107,255,.16), transparent 60%),
+        radial-gradient(820px 620px at 88% 4%, rgba(216,163,74,.14), transparent 58%),
+        radial-gradient(760px 700px at 60% 96%, rgba(79,216,232,.10), transparent 60%),
+        var(--bg);
+      background-attachment:fixed;
+    }
+
+    /* Los bloques vuelven a ser superficie, ahora de vidrio */
+    .panel {
+      position:relative;
+      border:1px solid var(--glass-borde);
+      border-top:1px solid var(--glass-borde);
+      border-radius:20px;
+      background:var(--glass);
+      backdrop-filter:blur(22px) saturate(150%);
+      -webkit-backdrop-filter:blur(22px) saturate(150%);
+      padding:var(--s5);
+      box-shadow:0 1px 0 rgba(255,255,255,.05) inset, 0 30px 70px -40px rgba(0,0,0,.9);
+      overflow:hidden;
+    }
+    /* Filo superior iluminado */
+    .panel::before {
+      content:""; position:absolute; inset:0 0 auto 0; height:1px;
+      background:linear-gradient(90deg,transparent,rgba(255,255,255,.42),transparent);
+      opacity:.75;
+    }
+    /* La luz sigue al cursor */
+    .panel::after {
+      content:""; position:absolute; inset:-1px; pointer-events:none; border-radius:inherit;
+      background:radial-gradient(340px circle at var(--mx,50%) var(--my,0%), rgba(216,163,74,.16), transparent 62%);
+      opacity:0; transition:opacity .35s var(--ease);
+    }
+    .panel:hover::after { opacity:1; }
+    .panel:hover { border-color:rgba(216,163,74,.34); }
+
+    /* Fichas de dato en vidrio */
+    .card {
+      border:1px solid var(--glass-borde); border-radius:14px;
+      background:rgba(255,255,255,.03);
+      backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);
+      padding:var(--s4);
+      transition:border-color .25s var(--ease), background-color .25s var(--ease), box-shadow .25s var(--ease), transform .25s var(--ease);
+    }
+    .card:hover {
+      border-color:rgba(216,163,74,.40);
+      background:rgba(216,163,74,.06);
+      box-shadow:var(--glow-acento);
+      transform:translateY(-2px);
+    }
+    .card strong { text-shadow:0 0 34px rgba(216,163,74,.42); }
+    .primary { box-shadow:var(--glow-acento); }
+
+    /* Botones con resplandor */
+    button { border-radius:12px; box-shadow:var(--glow-acento); }
+    button:hover:not(:disabled) { box-shadow:0 0 0 1px rgba(232,189,109,.5), 0 22px 60px -18px rgba(216,163,74,.8); transform:translateY(-1px); }
+    button.secondary { box-shadow:none; backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); background:rgba(255,255,255,.05); }
+    button.secondary:hover:not(:disabled) { box-shadow:var(--glow-frio); }
+
+    /* Campos de vidrio */
+    input, select, textarea {
+      border-radius:12px; background:rgba(255,255,255,.04);
+      border:1px solid var(--glass-borde);
+      backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px);
+      transition:border-color .2s var(--ease), box-shadow .2s var(--ease), background-color .2s var(--ease);
+    }
+    input:focus, select:focus, textarea:focus { box-shadow:var(--glow-acento); background:rgba(255,255,255,.06); }
+
+    /* Navegacion flotante */
+    .navigation {
+      border-radius:14px; margin-inline:0; padding:var(--s3) var(--s4); top:12px;
+      background:rgba(12,12,14,.55);
+      border:1px solid transparent;
+    }
+    .navigation.is-stuck { border-color:var(--glass-borde); box-shadow:0 20px 50px -30px rgba(0,0,0,.95); }
+
+    /* Los separadores se vuelven un filo de luz */
+    .regla-sep {
+      height:1px; background:linear-gradient(90deg,transparent,rgba(216,163,74,.55),rgba(160,107,255,.45),transparent);
+      margin:var(--s7) 0;
+    }
+
+    /* Entrada con escala */
+    .js-reveal .reveal { opacity:0; transform:translateY(30px) scale(.97); filter:blur(6px); }
+    .js-reveal .reveal.is-in {
+      opacity:1; transform:none; filter:none;
+      transition:opacity .7s var(--ease), transform .7s var(--ease), filter .7s var(--ease);
+      background-image:none; animation:none;
+    }
+
+    .progress i { background:linear-gradient(90deg,var(--violeta),var(--accent),var(--cian)); box-shadow:0 0 14px rgba(216,163,74,.75); }
+
+    @media (prefers-reduced-motion:reduce) {
+      .panel::after { display:none; }
+      .card:hover, button:hover:not(:disabled) { transform:none; }
+      .js-reveal .reveal, .js-reveal .reveal.is-in { opacity:1; transform:none; filter:none; transition:none; }
+    }
   </style>
 </head>
 <body>
@@ -361,7 +470,7 @@
       <h1>¿Cuánto cobrar por tu automatización con IA?</h1>
       <p class="intro">Arma tu oferta, calcula implementación y mantención, y descubre cuántos clientes necesitas para tu meta mensual. Todos los montos están en USD.</p>
       </div>
-      <svg class="header-art" role="img" aria-label="Brecha entre el margen aparente de 30 por ciento y el real de 23,08 por ciento, que es de 6,92 puntos" xmlns="http://www.w3.org/2000/svg" width="520" height="380" viewBox="0 0 520 380" role="img" aria-labelledby="cabecera-titulo cabecera-desc"><title id="cabecera-titulo">Margen aparente y margen real</title><desc id="cabecera-desc">Un multiplicador de 1,30 representa un margen real de 23,08%, frente al 30% aparente. La brecha es de 6,92 puntos.</desc><rect width="520" height="380" fill="#0b0b0c"/><g font-family="Georgia, serif"><text x="40" y="37" fill="#f2efe9" font-size="15" letter-spacing="2">LA DIFERENCIA DEL MARGEN</text><text x="40" y="62" fill="#9b968d" font-size="13">Multiplicador 1,30 · Base porcentual</text><path d="M40 79H480" stroke="#2b2b30" stroke-width="1"/><g fill="none" stroke="#2b2b30" stroke-width="1"><path d="M80 130H480M80 190H480M80 250H480"/><path d="M80 110V310H480"/><path d="M74 130H80M74 190H80M74 250H80M74 310H80"/></g><g fill="#9b968d" font-size="12" text-anchor="end"><text x="64" y="134">30%</text><text x="64" y="194">20%</text><text x="64" y="254">10%</text><text x="64" y="314">0%</text></g><rect x="140" y="130" width="80" height="180" fill="#9b968d"/><rect x="350" y="171.52" width="80" height="138.48" fill="#d8a34a"/><path d="M264 130H278V171.52H264" fill="none" stroke="#f2efe9" stroke-width="1"/><text x="290" y="155" fill="#f2efe9" font-size="14">6,92 puntos</text><path d="M80 310H480" stroke="#9b968d" stroke-width="1"/><text x="180" y="341" fill="#9b968d" font-size="14" text-anchor="middle">APARENTE 30%</text><text x="390" y="341" fill="#d8a34a" font-size="14" text-anchor="middle">REAL 23,08%</text><path d="M40 363H480" stroke="#2b2b30" stroke-width="1"/></g></svg>
+      <svg class="header-art" xmlns="http://www.w3.org/2000/svg" width="520" height="380" viewBox="0 0 520 380" role="img" aria-labelledby="cabecera-titulo cabecera-desc"><title id="cabecera-titulo">Margen aparente y margen real</title><desc id="cabecera-desc">Un multiplicador de 1,30 representa un margen real de 23,08%, frente al 30% aparente. La brecha es de 6,92 puntos.</desc><g font-family="Georgia, serif"><text x="40" y="37" fill="#f2efe9" font-size="15" letter-spacing="2">LA DIFERENCIA DEL MARGEN</text><text x="40" y="62" fill="#9b968d" font-size="13">Multiplicador 1,30 · Base porcentual</text><path d="M40 79H480" stroke="#2b2b30" stroke-width="1"/><g fill="none" stroke="#2b2b30" stroke-width="1"><path d="M80 130H480M80 190H480M80 250H480"/><path d="M80 110V310H480"/><path d="M74 130H80M74 190H80M74 250H80M74 310H80"/></g><g fill="#9b968d" font-size="12" text-anchor="end"><text x="64" y="134">30%</text><text x="64" y="194">20%</text><text x="64" y="254">10%</text><text x="64" y="314">0%</text></g><rect x="140" y="130" width="80" height="180" fill="#9b968d"/><rect x="350" y="171.52" width="80" height="138.48" fill="#d8a34a"/><path d="M264 130H278V171.52H264" fill="none" stroke="#f2efe9" stroke-width="1"/><text x="290" y="155" fill="#f2efe9" font-size="14">6,92 puntos</text><path d="M80 310H480" stroke="#9b968d" stroke-width="1"/><text x="180" y="341" fill="#9b968d" font-size="14" text-anchor="middle">APARENTE 30%</text><text x="390" y="341" fill="#d8a34a" font-size="14" text-anchor="middle">REAL 23,08%</text><path d="M40 363H480" stroke="#2b2b30" stroke-width="1"/></g></svg>
     </div>
     <nav class="navigation" aria-label="Secciones de la calculadora">
       <a href="#inputs-title">Proyecto</a>
@@ -1463,6 +1572,24 @@
   (() => {
     const quieto = window.matchMedia("(prefers-reduced-motion:reduce)");
 
+    // La luz de cada bloque sigue al cursor. Se apaga con motion reducido y en tactil.
+    if (!quieto.matches && matchMedia("(hover:hover)").matches) {
+      let pendiente = false, ultimo = null;
+      addEventListener("pointermove", ev => {
+        ultimo = ev;
+        if (pendiente) return;
+        pendiente = true;
+        requestAnimationFrame(() => {
+          pendiente = false;
+          const bloque = ultimo.target.closest && ultimo.target.closest(".panel");
+          if (!bloque) return;
+          const r = bloque.getBoundingClientRect();
+          bloque.style.setProperty("--mx",((ultimo.clientX - r.left) / r.width * 100) + "%");
+          bloque.style.setProperty("--my",((ultimo.clientY - r.top) / r.height * 100) + "%");
+        });
+      },{passive:true});
+    }
+
     // Sombra de la navegacion solo cuando queda adherida
     const nav = document.querySelector(".navigation");
     if (nav && "IntersectionObserver" in window) {
@@ -1509,8 +1636,16 @@
         e.target.querySelectorAll(".card strong").forEach((c,i) => setTimeout(() => contar(c), 120 + i * 70));
         obs.unobserve(e.target);
       }
-    },{rootMargin:"0px 0px -80px 0px",threshold:0});
+    },{rootMargin:"0px 0px 0px 0px",threshold:0});
     piezas.forEach(el => vigia.observe(el));
+
+    // Red de seguridad: nada que ya este a la vista puede quedar invisible.
+    requestAnimationFrame(() => {
+      piezas.forEach(el => {
+        const r = el.getBoundingClientRect();
+        if (r.top < innerHeight && r.bottom > 0) el.classList.add("is-in");
+      });
+    });
 
     // La ayuda larga que nadie referencia se guarda tras un resumen.
     const referenciados = new Set(
